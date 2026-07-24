@@ -74,7 +74,7 @@ const Sports = () => {
       title: 'Squash',
       description: 'Classic indoor squash racquets court for an energetic workout.',
       hours: '6 AM – 9 PM',
-      image: null,
+      image: '/images/squash.jpg',
       icon: '🏸'
     },
     {
@@ -90,7 +90,7 @@ const Sports = () => {
       title: 'Badminton',
       description: 'Well-maintained indoor badminton facilities for members of all skill levels.',
       hours: '6 AM – 9 PM',
-      image: null,
+      image: '/images/badminton.jpg',
       icon: '🏸'
     },
     {
@@ -98,7 +98,7 @@ const Sports = () => {
       title: 'Cards & Games',
       description: 'Dedicated rooms for bridge, rummy, and other traditional card games.',
       hours: '2 PM – 11 PM',
-      image: null,
+      image: '/images/cards.jpg',
       icon: '🃏'
     }
   ];
