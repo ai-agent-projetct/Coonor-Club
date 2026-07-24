@@ -1,0 +1,232 @@
+/* Color Palette */
+:root {
+  --color-mahogany: #4A2E1B;
+  --color-brass: #D4AF37;
+  --color-cream: #F9F8F3;
+  --color-forest: #2E5A44;
+  --color-charcoal: #1A1A1A;
+  --color-deep-black: #0D0D0D;
+  --color-warm-white: #FAF7F2;
+}
+
+.sports-page {
+  font-family: 'Inter', sans-serif;
+  color: var(--color-charcoal);
+  background-color: var(--color-cream);
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(46, 90, 68, 0.6); /* forest tint overlay */
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  padding: 2rem;
+}
+
+.hero-label {
+  display: block;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  color: var(--color-brass);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-size: 4rem;
+  margin: 0 0 1rem 0;
+  color: var(--color-warm-white);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Facilities Section */
+.facilities-section {
+  padding: 6rem 0;
+  background-color: var(--color-warm-white);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: var(--color-mahogany);
+  margin-bottom: 1rem;
+}
+
+.divider {
+  height: 2px;
+  width: 60px;
+  background-color: var(--color-brass);
+  margin: 0 auto;
+}
+
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.facility-card {
+  position: relative;
+  height: 300px;
+  background-color: var(--color-mahogany);
+  border-radius: 8px;
+  overflow: hidden;
+  color: white;
+  cursor: pointer;
+}
+
+.card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  transition: opacity 0.4s ease, transform 0.6s ease;
+}
+
+.facility-card:hover .card-bg {
+  opacity: 0.3;
+  transform: scale(1.05);
+}
+
+.card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+  transform: translateY(80px); /* hide description by default */
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.facility-card:hover .card-content {
+  transform: translateY(0);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-content h3 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  color: var(--color-brass);
+}
+
+.card-reveal {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  transition-delay: 0.1s;
+}
+
+.facility-card:hover .card-reveal {
+  opacity: 1;
+}
+
+.card-reveal p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  color: #ddd;
+}
+
+.hours {
+  font-size: 0.85rem;
+  color: var(--color-brass);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Fitness Section */
+.fitness-section {
+  padding: 6rem 0;
+  background-color: var(--color-forest);
+  color: var(--color-warm-white);
+  text-align: center;
+}
+
+.fitness-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+}
+
+.fitness-content h2 {
+  font-size: 2.5rem;
+  color: var(--color-brass);
+  margin-bottom: 1.5rem;
+}
+
+.fitness-content p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .hero-title { font-size: 2.5rem; }
+  .facility-card { height: auto; min-height: 300px; }
+  .card-content { transform: translateY(0); background: rgba(0,0,0,0.7); }
+  .card-reveal { opacity: 1; }
+}

@@ -1,0 +1,140 @@
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════ */
+.footer {
+  background: var(--color-deep-black);
+  border-top: 1px solid rgba(212, 175, 55, 0.08);
+  overflow: hidden;
+}
+
+.footer__marquee {
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.06);
+  overflow: hidden;
+}
+
+.footer__content {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-lg);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+}
+
+/* ── Brand ── */
+.footer__crest {
+  font-size: 3.2rem;
+  color: var(--color-brass);
+  display: block;
+  margin-bottom: var(--space-sm);
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.3));
+}
+
+.footer__club-name {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  margin-bottom: var(--space-sm);
+}
+
+.footer__motto {
+  font-size: 1.6rem;
+  color: rgba(249, 248, 243, 0.5);
+  line-height: 1.8;
+}
+
+/* ── Nav ── */
+.footer__nav-title {
+  margin-bottom: var(--space-md);
+}
+
+.footer__nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.footer__nav-link {
+  font-size: 1.5rem;
+  color: rgba(249, 248, 243, 0.5);
+  transition: color var(--duration-fast) ease;
+}
+
+.footer__nav-link:hover {
+  color: var(--color-brass);
+}
+
+/* ── Contact ── */
+.footer__address {
+  font-style: normal;
+}
+
+.footer__address p,
+.footer__hours p {
+  font-size: 1.4rem;
+  color: rgba(249, 248, 243, 0.5);
+  line-height: 1.8;
+}
+
+.footer__address a {
+  transition: color var(--duration-fast) ease;
+}
+
+.footer__address a:hover {
+  color: var(--color-brass);
+}
+
+/* ── Giant Wordmark ── */
+.footer__wordmark {
+  padding: var(--space-xl) 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+.footer__wordmark h2 {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 12vw, 14rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(212, 175, 55, 0.15);
+  line-height: 1;
+  user-select: none;
+}
+
+/* ── Bottom ── */
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(212, 175, 55, 0.06);
+}
+
+.footer__bottom p {
+  font-size: 1.2rem;
+  color: rgba(249, 248, 243, 0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .footer__top {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer__top {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: center;
+  }
+}

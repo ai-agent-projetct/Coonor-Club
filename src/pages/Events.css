@@ -1,0 +1,183 @@
+/* Events.css */
+:root {
+  --color-mahogany: #4A2E1B;
+  --color-brass: #D4AF37;
+  --color-cream: #F9F8F3;
+  --color-forest: #2E5A44;
+  --color-charcoal: #1A1A1A;
+  --color-deep-black: #0D0D0D;
+  --color-warm-white: #FAF7F2;
+}
+
+.events-page {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-warm-white);
+  color: var(--color-charcoal);
+  overflow-x: hidden;
+}
+
+.events-hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-image: url('/images/real-sports-ground.jpg');
+  background-size: cover;
+  background-position: center;
+  color: var(--color-cream);
+}
+
+.events-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 13, 13, 0.5);
+}
+
+.events-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.events-label {
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.9rem;
+  color: var(--color-brass);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.events-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 4.5rem;
+  margin-bottom: 1rem;
+}
+
+.events-subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+}
+
+.events-section {
+  padding: 6rem 10%;
+}
+
+.events-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 4rem;
+  color: var(--color-mahogany);
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.event-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 2rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(74, 46, 27, 0.1);
+}
+
+.event-date {
+  color: var(--color-forest);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.event-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-mahogany);
+}
+
+.event-time-loc {
+  font-size: 0.9rem;
+  color: var(--color-charcoal);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.event-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.schedule-table-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule-table th, .schedule-table td {
+  padding: 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.schedule-table th {
+  background-color: var(--color-mahogany);
+  color: var(--color-cream);
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.schedule-day {
+  font-weight: 600;
+  color: var(--color-forest);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.gallery-item {
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 4 / 3;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
