@@ -2,16 +2,7 @@
    HOME PAGE — Scroll-Driven Video Hero + 3D Experience
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Cursor Trail ── */
-.cursor-trail-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 9999;
-}
+/* Cursor trail styling now lives in components/CursorTrail.css (global) */
 
 /* ═══════════════════════════════════════════════════════
    SCROLL-DRIVEN VIDEO HERO

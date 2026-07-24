@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import SmoothScroll from './components/SmoothScroll'
+import CursorTrail from './components/CursorTrail'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import PageTransition from './components/PageTransition'
@@ -20,6 +21,7 @@ export default function App() {
 
   return (
     <SmoothScroll>
+      <CursorTrail />
       <Navbar />
       <AnimatePresence mode="wait" initial={false}>
         <Routes location={location} key={location.pathname}>
