@@ -292,6 +292,20 @@ export default function Home() {
     { quote: "From the immaculate tennis courts to the historic billiards room, every corner tells a story of the Nilgiris.", author: "Sanjay Patel", role: "Member since 2012" },
   ]
 
+  // Auto-scrolling heritage gallery — interleaves the estate's exteriors & grounds
+  const galleryItems = [
+    { src: '/images/hero-exterior.jpg', label: 'The Clubhouse' },
+    { src: '/images/real-exterior-1.jpg', label: 'The Main Building' },
+    { src: '/images/entrance.jpg', label: 'Established 1885' },
+    { src: '/images/real-entrance.jpg', label: 'The Entrance Porch' },
+    { src: '/images/lawn.jpg', label: 'The Garden Bungalow' },
+    { src: '/images/real-cottage.jpg', label: 'The Heritage Cottage' },
+    { src: '/images/tennis.jpg', label: 'Lawn Tennis' },
+    { src: '/images/real-sports-ground.jpg', label: 'The Sports Ground' },
+    { src: '/images/aerial.jpg', label: 'Five Acres from Above' },
+    { src: '/images/real-heritage-cottage.jpg', label: 'Garden Cottage' },
+  ]
+
   useEffect(() => {
     const interval = setInterval(() => setActiveTest(p => (p + 1) % testimonials.length), 5000)
     return () => clearInterval(interval)
@@ -313,10 +327,10 @@ export default function Home() {
         scrollTrigger: { trigger: '.facilities-section', start: 'top 75%' },
         y: 80, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out'
       })
-      // Gallery
-      gsap.from('.gallery-scroll-item', {
+      // Gallery — fade the whole strip in (the strip itself auto-scrolls)
+      gsap.from('.gallery-scroll', {
         scrollTrigger: { trigger: '.gallery-strip', start: 'top 80%' },
-        x: 60, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out'
+        opacity: 0, y: 40, duration: 1, ease: 'power3.out'
       })
       // CTA band
       gsap.from('.cta-band-content > *', {
@@ -374,16 +388,11 @@ export default function Home() {
               <h2>Five Acres of Heritage</h2>
             </div>
             <div className="gallery-scroll">
+              {/* Track is rendered twice back-to-back so the left→right loop is seamless */}
               <div className="gallery-scroll-inner">
-                {[
-                  { src: '/images/real-exterior-1.jpg', label: 'The Main Building' },
-                  { src: '/images/real-entrance.jpg', label: 'The Entrance Porch' },
-                  { src: '/images/real-cottage.jpg', label: 'The Heritage Cottage' },
-                  { src: '/images/real-sports-ground.jpg', label: 'The Sports Ground' },
-                  { src: '/images/real-heritage-cottage.jpg', label: 'Garden Cottage' },
-                ].map((item, i) => (
-                  <div className="gallery-scroll-item" key={i}>
-                    <img src={item.src} alt={item.label} />
+                {[...galleryItems, ...galleryItems].map((item, i) => (
+                  <div className="gallery-scroll-item" key={i} aria-hidden={i >= galleryItems.length}>
+                    <img src={item.src} alt={item.label} loading="lazy" />
                     <span className="gallery-scroll-label">{item.label}</span>
                   </div>
                 ))}

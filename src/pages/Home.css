@@ -249,29 +249,54 @@
 }
 
 .gallery-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  overflow: hidden;
   padding-bottom: var(--space-md);
+  /* Soft fade at both edges so items slide in/out gracefully */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
 }
 
 .gallery-scroll::-webkit-scrollbar { display: none; }
 
 .gallery-scroll-inner {
   display: flex;
-  gap: var(--space-md);
   width: max-content;
-  padding: 0 var(--space-md);
+  /* Continuous left→right drift. Track is duplicated in the JSX, so animating
+     to -50% and back to 0 loops seamlessly. */
+  animation: galleryMarquee 60s linear infinite;
+  will-change: transform;
+}
+
+/* Pause the drift while the visitor is inspecting the strip */
+.gallery-scroll:hover .gallery-scroll-inner {
+  animation-play-state: paused;
+}
+
+@keyframes galleryMarquee {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
 }
 
 .gallery-scroll-item {
   position: relative;
   width: 400px;
   aspect-ratio: 16/10;
+  margin-right: var(--space-md); /* uniform spacing incl. the loop seam */
   border-radius: var(--border-radius);
   overflow: hidden;
   flex-shrink: 0;
-  cursor: grab;
+}
+
+/* Accessibility: honour reduced-motion — stop the drift, allow manual scroll */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .gallery-scroll-inner { animation: none; }
 }
 
 .gallery-scroll-item img {
