@@ -72,7 +72,7 @@ const Heritage = () => {
     <div className="heritage-page" ref={containerRef}>
       {/* Hero Section */}
       <section className="heritage-hero">
-        <div className="heritage-hero-bg" style={{ backgroundImage: 'url(/images/real-exterior-1.jpg)' }}></div>
+        <div className="heritage-hero-bg" style={{ backgroundImage: 'url(/images/hero-exterior.jpg)' }}></div>
         <div className="heritage-hero-overlay"></div>
         <motion.div 
           className="heritage-hero-content"
@@ -113,14 +113,44 @@ const Heritage = () => {
         
         <div className="founders-grid">
           <div className="founder-card">
-            <div className="founder-image-placeholder"></div>
+            <div className="founder-cameo">
+              <svg className="founder-silhouette" viewBox="0 0 250 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Period portrait cameo of General Richard Hamilton — no photograph is known to survive">
+                <defs>
+                  <radialGradient id="camA-pg" cx="50%" cy="32%" r="82%">
+                    <stop offset="0%" stopColor="#f5efe1" /><stop offset="60%" stopColor="#e3d5bc" /><stop offset="100%" stopColor="#cbb590" />
+                  </radialGradient>
+                  <linearGradient id="camA-vig" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="70%" stopColor="#000000" stopOpacity="0" /><stop offset="100%" stopColor="#3a2a1c" stopOpacity="0.5" />
+                  </linearGradient>
+                </defs>
+                <rect width="250" height="320" fill="url(#camA-pg)" />
+                <path transform="translate(28,20) scale(0.78)" fill="#584234" d="M130,42 C156,45 169,68 167,95 C166,114 157,123 153,135 C151,145 155,152 163,158 C183,168 198,185 198,215 L198,286 L44,286 L44,216 C44,186 66,170 91,161 C103,157 107,149 105,138 C97,140 89,137 83,131 C79,127 81,123 78,120 C82,117 82,115 79,112 C73,111 66,111 61,107 C56,103 53,101 53,98 C53,93 63,95 65,89 C64,82 67,75 67,69 C69,60 74,53 86,47 C99,41 114,40 130,42 Z" />
+                <rect width="250" height="320" fill="url(#camA-vig)" />
+              </svg>
+              <span className="founder-cameo-note">No portrait extant · c.&nbsp;1885</span>
+            </div>
             <div className="founder-info">
               <h3>General Richard Hamilton</h3>
               <p>Military officer, visionary founder</p>
             </div>
           </div>
           <div className="founder-card">
-            <div className="founder-image-placeholder"></div>
+            <div className="founder-cameo">
+              <svg className="founder-silhouette" viewBox="0 0 250 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Period portrait cameo of Charles Thomas Campbell Gray — no photograph is known to survive">
+                <defs>
+                  <radialGradient id="camB-pg" cx="50%" cy="32%" r="82%">
+                    <stop offset="0%" stopColor="#f5efe1" /><stop offset="60%" stopColor="#e3d5bc" /><stop offset="100%" stopColor="#cbb590" />
+                  </radialGradient>
+                  <linearGradient id="camB-vig" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="70%" stopColor="#000000" stopOpacity="0" /><stop offset="100%" stopColor="#3a2a1c" stopOpacity="0.5" />
+                  </linearGradient>
+                </defs>
+                <rect width="250" height="320" fill="url(#camB-pg)" />
+                <path transform="translate(28,20) scale(0.78)" fill="#584234" d="M130,42 C156,45 169,68 167,95 C166,114 157,123 153,135 C151,145 155,152 163,158 C183,168 198,185 198,215 L198,286 L44,286 L44,216 C44,186 66,170 91,161 C103,157 107,149 105,138 C97,140 89,137 83,131 C79,127 81,123 78,120 C82,117 82,115 79,112 C73,111 66,111 61,107 C56,103 53,101 53,98 C53,93 63,95 65,89 C64,82 67,75 67,69 C69,60 74,53 86,47 C99,41 114,40 130,42 Z" />
+                <rect width="250" height="320" fill="url(#camB-vig)" />
+              </svg>
+              <span className="founder-cameo-note">No portrait extant · c.&nbsp;1885</span>
+            </div>
             <div className="founder-info">
               <h3>Charles Thomas Campbell Gray</h3>
               <p>Proprietor of Gray's Hotel, benefactor</p>

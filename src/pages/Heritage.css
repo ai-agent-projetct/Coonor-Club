@@ -210,22 +210,43 @@
   text-align: center;
 }
 
-.founder-image-placeholder {
+/* Antique framed portrait cameo — used where no photograph of the founder survives */
+.founder-cameo {
   width: 250px;
   height: 320px;
   margin: 0 auto 2rem;
-  background-color: #E6E2D6;
-  border: 8px solid white;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  border: 8px solid #fff;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
   position: relative;
+  overflow: hidden;
 }
 
-.founder-image-placeholder::after {
+.founder-cameo::after {
   content: '';
   position: absolute;
   top: -12px; left: -12px; right: -12px; bottom: -12px;
   border: 1px solid var(--color-brass, #D4AF37);
   pointer-events: none;
+}
+
+.founder-silhouette {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.founder-cameo-note {
+  position: absolute;
+  left: 0; right: 0; bottom: 14px;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(243, 236, 221, 0.9);
+  z-index: 1;
 }
 
 .founder-info h3 {
