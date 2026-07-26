@@ -36,7 +36,7 @@ export default function Navbar() {
       <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
         <div className="navbar__inner">
           <Link to="/" className="navbar__logo">
-            <span className="navbar__logo-crest">⚜</span>
+            <img src="/images/coonoor-logo.png" alt="Coonoor Club emblem" className="navbar__logo-crest" />
             <div className="navbar__logo-text">
               <span className="navbar__logo-name">Coonoor Club</span>
               <span className="navbar__logo-year">Est. 1885</span>

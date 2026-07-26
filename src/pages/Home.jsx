@@ -236,16 +236,16 @@ export default function Home() {
 
   // Auto-scrolling heritage gallery — interleaves the estate's exteriors & grounds
   const galleryItems = [
-    { src: '/images/hero-exterior.jpg', label: 'The Clubhouse' },
-    { src: '/images/real-exterior-1.jpg', label: 'The Main Building' },
-    { src: '/images/entrance.jpg', label: 'Established 1885' },
-    { src: '/images/real-entrance.jpg', label: 'The Entrance Porch' },
-    { src: '/images/lawn.jpg', label: 'The Garden Bungalow' },
-    { src: '/images/real-cottage.jpg', label: 'The Heritage Cottage' },
-    { src: '/images/tennis.jpg', label: 'Lawn Tennis' },
-    { src: '/images/real-sports-ground.jpg', label: 'The Sports Ground' },
-    { src: '/images/aerial.jpg', label: 'Five Acres from Above' },
-    { src: '/images/real-heritage-cottage.jpg', label: 'Garden Cottage' },
+    { src: '/images/club-fullview.jpg', label: 'The Clubhouse' },
+    { src: '/images/club-entrance.jpg', label: 'Established 1885' },
+    { src: '/images/club-portico.jpg', label: 'The Portico' },
+    { src: '/images/club-frontlawn.jpg', label: 'The Front Lawn' },
+    { src: '/images/club-bar.jpg', label: 'The Raj Bar' },
+    { src: '/images/club-library.jpg', label: 'The Library' },
+    { src: '/images/club-hall1.jpg', label: 'The Great Hall' },
+    { src: '/images/club-tenniscourt.jpg', label: 'Lawn Tennis' },
+    { src: '/images/club-indoorstadium.jpg', label: 'The Badminton Hall' },
+    { src: '/images/club-outsideview.jpg', label: 'The Nilgiri Hills' },
   ]
 
   useEffect(() => {
@@ -359,11 +359,11 @@ export default function Home() {
               <p>Explore the facilities that make Coonoor Club a home away from home</p>
             </div>
             <div className="facilities-grid">
-              <TiltCard title="The Dining Hall" subtitle="Fine Dining" image="/images/restaurant.jpg" link="/dining" />
-              <TiltCard title="The Lounge Bar" subtitle="Spirits & Stories" image="/images/bar.jpg" link="/dining" />
+              <TiltCard title="The Planters' Table" subtitle="Fine Dining" image="/images/club-hall1.jpg" link="/dining" />
+              <TiltCard title="The Raj Bar" subtitle="Spirits & Stories" image="/images/club-bar.jpg" link="/dining" />
               <TiltCard title="Heritage Billiards" subtitle="Since 1906" image="/images/billiards.jpg" link="/sports" />
-              <TiltCard title="Lawn Tennis" subtitle="The Founding Sport" image="/images/real-sports-ground.jpg" link="/sports" />
-              <TiltCard title="The Library" subtitle="Quiet Hours" image="/images/library.jpg" link="/sports" />
+              <TiltCard title="Lawn Tennis" subtitle="The Founding Sport" image="/images/club-tenniscourt.jpg" link="/sports" />
+              <TiltCard title="The Library" subtitle="Quiet Hours" image="/images/club-library.jpg" link="/sports" />
               <TiltCard title="Heritage Stay" subtitle="Rooms & Cottages" image="/images/real-cottage.jpg" link="/accommodation" />
             </div>
           </div>
@@ -374,7 +374,7 @@ export default function Home() {
           <div className="container stats-grid">
             <AnimatedCounter end={1885} label="Founded" />
             <AnimatedCounter end={900} suffix="+" label="Members" />
-            <AnimatedCounter end={70} suffix="+" label="Affiliated Clubs" />
+            <AnimatedCounter end={80} suffix="+" label="Affiliated Clubs" />
             <AnimatedCounter end={5} label="Acres of Heritage" />
           </div>
         </section>

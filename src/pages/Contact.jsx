@@ -78,10 +78,11 @@ const Contact = () => {
         <div className="contact-grid">
           <div className="contact-info">
             <h3>Club Information</h3>
-            <p><strong>Address:</strong><br />134 Club Road, Gray's Hill, Coonoor,<br />The Nilgiris, Tamil Nadu – 643101</p>
-            <p><strong>Phone:</strong><br />+91 423-2231714 / +91 423-2231717</p>
-            <p><strong>Email:</strong><br />coonoorclub1885@gmail.com</p>
-            <p><strong>Club Hours:</strong><br />Office: 9:00 AM – 5:00 PM<br />Dining: 7:00 AM – 10:30 PM</p>
+            <p><strong>Address:</strong><br />Club Road, Coonoor – 643 101,<br />The Nilgiris, Tamil Nadu, India<br /><em>Reg. No. 22 of 1991</em></p>
+            <p><strong>Phone:</strong><br />0423 223 1717</p>
+            <p><strong>WhatsApp:</strong><br />+91 93445 14897</p>
+            <p><strong>Email:</strong><br />info@coonoorclub.com</p>
+            <p><strong>Club Hours:</strong><br />Daily: 10:00 AM – 10:00 PM</p>
             <p><strong>How to reach:</strong><br />Nearest railway station: Coonoor (Nilgiri Mountain Railway)<br />Nearest airport: Coimbatore (100 km)</p>
           </div>
 
@@ -103,11 +104,11 @@ const Contact = () => {
                 <label>Subject</label>
                 <select required>
                   <option value="">Select a subject...</option>
-                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Event Booking">Event Booking</option>
+                  <option value="Dining Reservation">Dining Reservation</option>
+                  <option value="Guest Accommodation">Guest Accommodation</option>
                   <option value="Membership">Membership</option>
-                  <option value="Accommodation">Accommodation</option>
-                  <option value="Events">Events</option>
-                  <option value="Other">Other</option>
+                  <option value="General Enquiry">General Enquiry</option>
                 </select>
               </div>
               <div className="form-group">

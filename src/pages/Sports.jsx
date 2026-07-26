@@ -58,7 +58,7 @@ const Sports = () => {
       title: 'Lawn Tennis',
       description: 'The founding sport of the club. Outdoor lawn and hard courts surrounded by eucalyptus trees.',
       hours: '6 AM – 6 PM',
-      image: '/images/real-sports-ground.jpg',
+      image: '/images/club-tenniscourt.jpg',
       icon: '🎾'
     },
     {
@@ -82,15 +82,15 @@ const Sports = () => {
       title: 'Library & Reading',
       description: 'Quiet space with extensive book collections, historical archives, and periodicals.',
       hours: '9 AM – 8 PM',
-      image: '/images/library.jpg',
+      image: '/images/club-library.jpg',
       icon: '📚'
     },
     {
       id: 5,
       title: 'Badminton',
-      description: 'Well-maintained indoor badminton facilities for members of all skill levels.',
+      description: 'The club’s heritage indoor badminton hall, set beneath a soaring timber roof.',
       hours: '6 AM – 9 PM',
-      image: '/images/badminton.jpg',
+      image: '/images/club-indoorstadium.jpg',
       icon: '🏸'
     },
     {
@@ -98,7 +98,7 @@ const Sports = () => {
       title: 'Cards & Games',
       description: 'Dedicated rooms for bridge, rummy, and other traditional card games.',
       hours: '2 PM – 11 PM',
-      image: '/images/cards.jpg',
+      image: '/images/club-hall2.jpg',
       icon: '🃏'
     }
   ];
@@ -107,7 +107,7 @@ const Sports = () => {
     <div className="sports-page">
       {/* Hero Section */}
       <section className="hero-section" ref={heroRef}>
-        <div className="hero-bg" style={{ backgroundImage: 'url(/images/real-sports-ground.jpg)' }}></div>
+        <div className="hero-bg" style={{ backgroundImage: 'url(/images/club-tenniscourt.jpg)' }}></div>
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <span className="hero-label">RECREATION</span>
