@@ -119,3 +119,50 @@
 .pt-muted { color: #8a7862; font-size: 0.86rem; }
 .pt-right { text-align: right; }
 .pt-empty { color: #8a7862; font-style: italic; padding: 0.8rem 0; }
+
+/* ── Wallet recharge / notifications ── */
+.pt-msg--warn { background: #fdf3e0; color: #a97514; display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
+.pt-bell { position: relative; cursor: default; font-size: 1.15rem; }
+.pt-bell-badge {
+  position: absolute; top: -6px; right: -8px; background: #a93226; color: #fff;
+  font-size: 0.62rem; font-weight: 700; min-width: 16px; height: 16px; line-height: 16px;
+  text-align: center; border-radius: 999px; padding: 0 3px;
+}
+.pt-notif-list { list-style: none; padding: 0; margin: 0.6rem 0 0; }
+.pt-notif-list li {
+  display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;
+  padding: 0.6rem 0.2rem; border-bottom: 1px solid var(--line);
+}
+.pt-notif-list li.unread { background: #fdf6ea; padding-left: 0.6rem; border-radius: 6px; }
+.pt-notif-list li span:first-child { color: var(--ink); }
+
+.pt-pay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.6rem; margin: 0.4rem 0 0.8rem; }
+.pt-pay-btn {
+  display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+  padding: 0.7rem 0.6rem; border: 1px solid var(--line); background: #fff; border-radius: 10px;
+  font-weight: 600; color: var(--mahog); cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+}
+.pt-pay-btn:hover:not(:disabled) { border-color: var(--brass); background: #fffdf6; transform: translateY(-2px); }
+.pt-pay-btn:disabled { opacity: 0.6; cursor: wait; }
+.pt-pay-icon { font-size: 1.15rem; }
+.pt-test-note {
+  background: #eef4fb; border: 1px solid #d6e4f5; color: #33506e;
+  border-radius: 8px; padding: 0.7rem 0.85rem; font-size: 0.82rem; line-height: 1.5; margin: 0 0 0.5rem;
+}
+
+/* ── Admin member drawer (modal) ── */
+.pt-clickrow { cursor: pointer; }
+.pt-clickrow:hover { background: #fbf8f1; }
+.pt-search { padding: 0.5rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; font-size: 0.9rem; min-width: 220px; font-family: inherit; }
+.pt-drawer {
+  position: fixed; inset: 0; z-index: 60; overflow-y: auto;
+  background: rgba(20,14,9,0.55); padding: 3vh 1rem;
+}
+.pt-drawer-card {
+  max-width: 860px; margin: 0 auto; background: #fff; border-radius: 14px;
+  padding: 1.8rem; box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+}
+.pt-drawer-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; border-bottom: 1px solid var(--line); padding-bottom: 1rem; margin-bottom: 1rem; }
+.pt-drawer-head h3 { font-family: 'Playfair Display', serif; color: var(--mahog); margin: 0 0 0.3rem; font-size: 1.4rem; }
+.pt-drawer-bal { font-size: 1.5rem; font-weight: 800; color: var(--mahog); font-family: 'Playfair Display', serif; }
+.pt-drawer-h { color: var(--forest); font-size: 1rem; margin: 1.5rem 0 0.7rem; border-left: 3px solid var(--brass); padding-left: 0.6rem; }

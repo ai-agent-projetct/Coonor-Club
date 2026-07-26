@@ -1,3 +1,7 @@
+/* Wallet policy */
+export const LOW_BALANCE = 4000      // warn the member at/below this
+export const RECHARGE_AMOUNT = 20000 // standard wallet recharge
+
 /* Atomic wallet operations. Always call inside a transaction connection so the
    member row is locked (FOR UPDATE) while balance is read, checked and updated. */
 
@@ -8,7 +12,7 @@ export async function debitWallet(conn, memberId, amount, meta = {}) {
   if (!m) throw Object.assign(new Error('Member not found'), { status: 404 })
   const balance = Number(m.wallet_balance)
   if (balance < amount)
-    throw Object.assign(new Error('Insufficient wallet balance — please top up at the club office.'), { status: 402 })
+    throw Object.assign(new Error('Insufficient wallet balance — please recharge your wallet.'), { status: 402 })
   const after = +(balance - amount).toFixed(2)
   await conn.query('UPDATE members SET wallet_balance = ? WHERE id = ?', [after, memberId])
   await conn.query(
@@ -17,6 +21,14 @@ export async function debitWallet(conn, memberId, amount, meta = {}) {
      VALUES (?, 'debit', ?, ?, ?, ?, ?, ?)`,
     [memberId, amount, after, meta.reason || null, meta.refType || null, meta.refId || null, meta.createdBy || null]
   )
+  // Low-balance alert on every spend once the wallet is at/below the threshold.
+  if (after <= LOW_BALANCE) {
+    try {
+      await conn.query(
+        `INSERT INTO notifications (member_id, message, kind) VALUES (?,?, 'low_balance')`,
+        [memberId, `Low wallet balance: ₹${after.toLocaleString('en-IN')}. Please recharge to keep enjoying club services.`])
+    } catch { /* notifications table may not exist on an un-migrated DB */ }
+  }
   return after
 }
 

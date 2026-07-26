@@ -36,6 +36,10 @@ CREATE TABLE IF NOT EXISTS members (
   membership_type_id INT,
   status             ENUM('pending','active','suspended','rejected') NOT NULL DEFAULT 'pending',
   wallet_balance     DECIMAL(12,2) NOT NULL DEFAULT 0,
+  aadhaar            VARCHAR(20),
+  pan                VARCHAR(15),
+  address            VARCHAR(300),
+  occupation         VARCHAR(120),
   joined_at          DATE,
   approved_by        INT,
   approved_at        TIMESTAMP NULL,
@@ -185,6 +189,31 @@ CREATE TABLE IF NOT EXISTS events (
   created_by   INT,
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_ev_admin FOREIGN KEY (created_by) REFERENCES admins(id)
+);
+
+-- ----- Member documents (KYC — Aadhaar/PAN/photo/etc.) -------
+CREATE TABLE IF NOT EXISTS member_documents (
+  id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+  member_id  INT NOT NULL,
+  doc_type   VARCHAR(60) NOT NULL,        -- Aadhaar / PAN / Photo / Address Proof / Other
+  reference  VARCHAR(120),                -- number or short reference
+  file_url   VARCHAR(400),                -- optional link to the uploaded file
+  created_by INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_doc_member FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
+  INDEX idx_doc_member (member_id)
+);
+
+-- ----- Member notifications (low-balance alerts, etc.) -------
+CREATE TABLE IF NOT EXISTS notifications (
+  id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+  member_id  INT NOT NULL,
+  message    VARCHAR(300) NOT NULL,
+  kind       VARCHAR(40) DEFAULT 'info',  -- 'low_balance' | 'info'
+  is_read    TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_notif_member FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
+  INDEX idx_notif_member (member_id, is_read)
 );
 
 -- ----- YouTube videos (admin-managed) -----------------------

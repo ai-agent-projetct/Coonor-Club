@@ -3,15 +3,24 @@ import { useNavigate } from 'react-router-dom'
 import { api, money, getRole, isAuthed, clearSession } from './api'
 import './portal.css'
 
+const PAY_METHODS = [
+  { key: 'GPay', label: 'GPay', icon: '🟢' },
+  { key: 'UPI', label: 'UPI', icon: '🏦' },
+  { key: 'Card', label: 'Debit Card', icon: '💳' },
+  { key: 'Credit Card', label: 'Credit Card', icon: '💠' },
+]
+
 export default function MemberDashboard() {
   const nav = useNavigate()
   const [me, setMe] = useState(null)
-  const [wallet, setWallet] = useState({ balance: 0, transactions: [] })
+  const [wallet, setWallet] = useState({ balance: 0, transactions: [], low_balance: false, low_threshold: 4000, recharge_amount: 20000 })
   const [catalog, setCatalog] = useState({ rooms: [], areas: [], venues: [] })
   const [bookings, setBookings] = useState({ rooms: [], tables: [], play: [] })
+  const [notifs, setNotifs] = useState([])
   const [tab, setTab] = useState('stay')
   const [msg, setMsg] = useState(null)
   const [err, setErr] = useState(null)
+  const [busyPay, setBusyPay] = useState(false)
 
   useEffect(() => {
     if (!isAuthed() || getRole() !== 'member') { nav('/login'); return }
@@ -20,41 +29,58 @@ export default function MemberDashboard() {
 
   async function loadAll() {
     try {
-      const [meR, w, cat, bk] = await Promise.all([
+      const [meR, w, cat, bk, nt] = await Promise.all([
         api('/auth/me'), api('/member/wallet'), api('/member/catalog'), api('/member/bookings'),
+        api('/member/notifications').catch(() => []),
       ])
-      setMe(meR.user); setWallet(w); setCatalog(cat); setBookings(bk)
+      setMe(meR.user); setWallet(w); setCatalog(cat); setBookings(bk); setNotifs(nt || [])
     } catch (e) {
       if (/session|token|Authentication/i.test(e.message)) { clearSession(); nav('/login') }
       else setErr(e.message)
     }
   }
-  async function refresh() { const [w, bk] = await Promise.all([api('/member/wallet'), api('/member/bookings')]); setWallet(w); setBookings(bk) }
+  async function refresh() {
+    const [w, bk, nt] = await Promise.all([api('/member/wallet'), api('/member/bookings'), api('/member/notifications').catch(() => [])])
+    setWallet(w); setBookings(bk); setNotifs(nt || [])
+  }
   function logout() { clearSession(); nav('/login') }
-  const flash = (t, ok = true) => { ok ? setMsg(t) : setErr(t); setTimeout(() => { setMsg(null); setErr(null) }, 4000) }
+  const flash = (t, ok = true) => { ok ? setMsg(t) : setErr(t); setTimeout(() => { setMsg(null); setErr(null) }, 5000) }
 
   async function book(path, body, label) {
     setErr(null); setMsg(null)
-    try { const r = await api(path, { method: 'POST', body }); await refresh(); flash(`${label} confirmed.${r.wallet_balance !== undefined ? ' New balance ' + money(r.wallet_balance) : ''}`) }
-    catch (e) { flash(e.message, false) }
+    try {
+      const r = await api(path, { method: 'POST', body }); await refresh()
+      let m = `${label} confirmed.${r.wallet_balance !== undefined ? ' New balance ' + money(r.wallet_balance) : ''}`
+      if (r.wallet_balance !== undefined && r.wallet_balance <= (wallet.low_threshold || 4000))
+        m += ' ⚠️ Your balance is low — please recharge.'
+      flash(m)
+    } catch (e) { flash(e.message, false) }
   }
   async function cancel(type, id) {
     try { await api(`/member/bookings/${type}/${id}/cancel`, { method: 'POST' }); await refresh(); flash('Booking cancelled.') }
     catch (e) { flash(e.message, false) }
   }
+  async function recharge(method) {
+    setBusyPay(true); setErr(null); setMsg(null)
+    try {
+      const r = await api('/member/wallet/recharge', { method: 'POST', body: { method, amount: wallet.recharge_amount || 20000 } })
+      await refresh()
+      flash(`Test recharge of ${money(r.amount)} via ${method} successful. (Test mode — no real payment was taken.)`)
+    } catch (e) { flash(e.message, false) } finally { setBusyPay(false) }
+  }
+  async function markRead() { try { await api('/member/notifications/read', { method: 'POST' }); await refresh() } catch {} }
 
   if (!me) return <div className="pt"><div className="pt-wrap"><p className="pt-muted">Loading…</p></div></div>
+  const unread = notifs.filter(n => !n.is_read).length
 
   return (
     <div className="pt">
       <div className="pt-top">
-        <div className="pt-top-brand">
-          <img src="/images/coonoor-logo.png" alt="" />
-          <strong>Coonoor Club</strong>
-        </div>
+        <div className="pt-top-brand"><img src="/images/coonoor-logo.png" alt="" /><strong>Coonoor Club</strong></div>
         <div className="pt-top-right">
           <span>{me.name}{me.member_no ? ` · ${me.member_no}` : ''}</span>
           <span className="pt-wallet-pill">Wallet {money(wallet.balance)}</span>
+          {unread > 0 && <span className="pt-bell" title={`${unread} new`}>🔔<span className="pt-bell-badge">{unread}</span></span>}
           <button className="pt-btn pt-btn--ghost pt-btn--sm" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.4)' }} onClick={logout}>Sign out</button>
         </div>
       </div>
@@ -62,9 +88,33 @@ export default function MemberDashboard() {
       <div className="pt-wrap">
         {msg && <div className="pt-msg pt-msg--ok">{msg}</div>}
         {err && <div className="pt-msg pt-msg--err">{err}</div>}
+        {wallet.low_balance && (
+          <div className="pt-msg pt-msg--warn">
+            ⚠️ Your wallet balance is low ({money(wallet.balance)}). Please recharge to keep enjoying club services.
+            <button className="pt-btn pt-btn--sm pt-btn--brass" style={{ marginLeft: '0.7rem' }}
+              onClick={() => document.getElementById('recharge').scrollIntoView({ behavior: 'smooth' })}>Recharge now</button>
+          </div>
+        )}
+
+        {notifs.length > 0 && (
+          <div className="pt-panel" style={{ marginBottom: '1.4rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ margin: 0 }}>Notifications</h2>
+              {unread > 0 && <button className="pt-btn pt-btn--sm pt-btn--ghost" onClick={markRead}>Mark all read</button>}
+            </div>
+            <ul className="pt-notif-list">
+              {notifs.slice(0, 6).map(n => (
+                <li key={n.id} className={n.is_read ? '' : 'unread'}>
+                  <span>{n.message}</span>
+                  <span className="pt-muted" style={{ fontSize: '0.78rem' }}>{new Date(n.created_at).toLocaleString('en-IN')}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="pt-grid pt-grid--2">
-          {/* ── Make a booking ── */}
+          {/* Make a booking */}
           <div className="pt-panel">
             <h2>Make a Booking</h2>
             <div className="pt-admin-tabs">
@@ -77,15 +127,25 @@ export default function MemberDashboard() {
             {tab === 'play' && <PlayForm areas={catalog.areas} onBook={book} />}
           </div>
 
-          {/* ── Wallet ── */}
-          <div className="pt-panel">
+          {/* Wallet + recharge */}
+          <div className="pt-panel" id="recharge">
             <h2>Wallet</h2>
             <div className="pt-stat" style={{ marginBottom: '1rem' }}>
-              <div className="n">{money(wallet.balance)}</div>
-              <div className="l">Available balance</div>
+              <div className="n" style={{ color: wallet.low_balance ? '#a93226' : undefined }}>{money(wallet.balance)}</div>
+              <div className="l">Available balance{wallet.low_balance ? ' · low' : ''}</div>
             </div>
-            <p className="pt-muted">Top-ups are added by the club office. Bookings are deducted automatically.</p>
-            <h3>Recent transactions</h3>
+
+            <h3>Recharge wallet — {money(wallet.recharge_amount || 20000)}</h3>
+            <div className="pt-pay-grid">
+              {PAY_METHODS.map(p => (
+                <button key={p.key} className="pt-pay-btn" disabled={busyPay} onClick={() => recharge(p.key)}>
+                  <span className="pt-pay-icon">{p.icon}</span>{p.label}
+                </button>
+              ))}
+            </div>
+            <p className="pt-test-note">🔒 <strong>Test mode:</strong> live GPay / UPI / Card payments are coming soon. Tapping a method simulates a successful recharge so you can try the flow — no real payment is taken.</p>
+
+            <h3>Spending history</h3>
             <div className="pt-scroll">
               <table className="pt-table">
                 <thead><tr><th>Date</th><th>Detail</th><th>Type</th><th className="pt-right">Amount</th><th className="pt-right">Balance</th></tr></thead>
@@ -106,24 +166,21 @@ export default function MemberDashboard() {
           </div>
         </div>
 
-        {/* ── My bookings ── */}
+        {/* My bookings */}
         <div className="pt-panel" style={{ marginTop: '1.4rem' }}>
           <h2>My Bookings</h2>
           <h3>Stays</h3>
-          <BookingTable
-            cols={['Room', 'Check-in', 'Check-out', 'Nights', 'Amount', 'Status', '']}
+          <BookingTable cols={['Room', 'Check-in', 'Check-out', 'Nights', 'Amount', 'Status', '']}
             rows={bookings.rooms} render={(b) => [b.room, b.check_in, b.check_out, b.nights, money(b.total_amount),
               <span className={`pt-badge ${b.status}`}>{b.status}</span>,
               b.status === 'confirmed' ? <button className="pt-btn pt-btn--sm pt-btn--danger" onClick={() => cancel('room', b.id)}>Cancel</button> : '']} />
           <h3>Table Reservations</h3>
-          <BookingTable
-            cols={['Venue', 'Date', 'Time', 'Party', 'Status', '']}
+          <BookingTable cols={['Venue', 'Date', 'Time', 'Party', 'Status', '']}
             rows={bookings.tables} render={(b) => [b.venue, b.booking_date, b.booking_time, b.party_size,
               <span className={`pt-badge ${b.status}`}>{b.status}</span>,
               b.status === 'confirmed' ? <button className="pt-btn pt-btn--sm pt-btn--danger" onClick={() => cancel('table', b.id)}>Cancel</button> : '']} />
           <h3>Play Area</h3>
-          <BookingTable
-            cols={['Area', 'Date', 'Time', 'Mins', 'Charge', 'Status', '']}
+          <BookingTable cols={['Area', 'Date', 'Time', 'Mins', 'Charge', 'Status', '']}
             rows={bookings.play} render={(b) => [b.area, b.booking_date, b.start_time, b.duration_mins, money(b.charge_amount),
               <span className={`pt-badge ${b.status}`}>{b.status}</span>,
               b.status === 'confirmed' ? <button className="pt-btn pt-btn--sm pt-btn--danger" onClick={() => cancel('play', b.id)}>Cancel</button> : '']} />
@@ -185,7 +242,7 @@ function TableForm({ venues, onBook }) {
         <div className="pt-field"><label>Party</label><input type="number" min="1" value={f.party_size} onChange={e => setF({ ...f, party_size: e.target.value })} /></div>
       </div>
       <div className="pt-field"><label>Note (optional)</label><input value={f.note} onChange={e => setF({ ...f, note: e.target.value })} placeholder="Any special request" /></div>
-      <p className="pt-muted">Table reservations are complimentary — food &amp; drinks are billed to your account.</p>
+      <p className="pt-muted">Table reservations are complimentary — food &amp; drinks are billed to your wallet.</p>
       <button className="pt-btn pt-btn--block" style={{ marginTop: '0.6rem' }}>Reserve Table</button>
     </form>
   )

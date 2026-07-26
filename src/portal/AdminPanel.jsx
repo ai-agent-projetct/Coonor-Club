@@ -105,64 +105,146 @@ function ApprovalRow({ m, types, onApprove, onReject }) {
 }
 
 function Members() {
-  const [rows, setRows] = useState([]); const [sel, setSel] = useState(null); const [err, flash] = useErr()
+  const [rows, setRows] = useState([]); const [sel, setSel] = useState(null); const [q, setQ] = useState(''); const [err, flash] = useErr()
   const load = () => api('/admin/members').then(setRows).catch(e => flash(e.message))
   useEffect(() => { load() }, [])
+  const filtered = rows.filter(m => !q || `${m.name} ${m.email} ${m.member_no || ''} ${m.phone || ''}`.toLowerCase().includes(q.toLowerCase()))
   return (
     <div className="pt-panel">
-      <h2>Members</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.6rem' }}>
+        <h2 style={{ margin: 0 }}>Members <span className="pt-muted" style={{ fontSize: '0.9rem' }}>({rows.length} total)</span></h2>
+        <input className="pt-search" placeholder="Search name / email / no." value={q} onChange={e => setQ(e.target.value)} />
+      </div>
       {err && <div className="pt-msg pt-msg--err">{err}</div>}
+      <p className="pt-muted" style={{ margin: '0.4rem 0 0.8rem' }}>Click any member to open their full profile, documents and wallet.</p>
       <div className="pt-scroll"><table className="pt-table">
-        <thead><tr><th>No.</th><th>Name</th><th>Email</th><th>Plan</th><th>Status</th><th className="pt-right">Wallet</th><th></th></tr></thead>
+        <thead><tr><th>No.</th><th>Name</th><th>Phone</th><th>Plan</th><th>Status</th><th className="pt-right">Wallet</th><th></th></tr></thead>
         <tbody>
-          {rows.map(m => <tr key={m.id}>
-            <td>{m.member_no || '—'}</td><td>{m.name}</td><td>{m.email}</td><td>{m.membership_type || '—'}</td>
+          {filtered.map(m => <tr key={m.id} className="pt-clickrow" onClick={() => setSel(m.id)}>
+            <td>{m.member_no || '—'}</td><td>{m.name}</td><td>{m.phone || '—'}</td><td>{m.membership_type || '—'}</td>
             <td><span className={`pt-badge ${m.status}`}>{m.status}</span></td>
             <td className="pt-right">{money(m.wallet_balance)}</td>
-            <td><button className="pt-btn pt-btn--sm pt-btn--ghost" onClick={() => setSel(m)}>Manage</button></td>
+            <td><button className="pt-btn pt-btn--sm pt-btn--ghost" onClick={(e) => { e.stopPropagation(); setSel(m.id) }}>Open</button></td>
           </tr>)}
         </tbody>
       </table></div>
-      {sel && <MemberDrawer m={sel} onClose={() => setSel(null)} onChange={load} />}
+      {sel && <MemberDrawer id={sel} onClose={() => setSel(null)} onChange={load} />}
     </div>
   )
 }
-function MemberDrawer({ m, onClose, onChange }) {
-  const [amt, setAmt] = useState(''); const [chg, setChg] = useState({ amount: '', description: '', deduct: true }); const [err, flash] = useErr(); const [ok, setOk] = useState(null)
-  const done = (t) => { setOk(t); onChange(); setTimeout(() => setOk(null), 3000) }
-  const topup = async () => { try { const r = await api(`/admin/members/${m.id}/wallet/topup`, { method: 'POST', body: { amount: Number(amt) } }); setAmt(''); done('Wallet credited. New balance ' + money(r.wallet_balance)) } catch (e) { flash(e.message) } }
-  const charge = async () => { try { await api(`/admin/members/${m.id}/charge`, { method: 'POST', body: { ...chg, amount: Number(chg.amount) } }); setChg({ amount: '', description: '', deduct: true }); done('Charge recorded.') } catch (e) { flash(e.message) } }
-  const setStatus = async (status) => { try { await api(`/admin/members/${m.id}/status`, { method: 'POST', body: { status } }); done('Status updated.') } catch (e) { flash(e.message) } }
+
+function MemberDrawer({ id, onClose, onChange }) {
+  const [data, setData] = useState(null); const [profile, setProfile] = useState({})
+  const [amt, setAmt] = useState(''); const [chg, setChg] = useState({ amount: '', description: '', deduct: true })
+  const [doc, setDoc] = useState({ doc_type: 'Aadhaar', reference: '', file_url: '' })
+  const [err, flash] = useErr(); const [ok, setOk] = useState(null)
+  const load = () => api('/admin/members/' + id).then(d => {
+    setData(d)
+    setProfile({
+      name: d.member.name || '', phone: d.member.phone || '', aadhaar: d.member.aadhaar || '', pan: d.member.pan || '',
+      address: d.member.address || '', occupation: d.member.occupation || '', joined_at: (d.member.joined_at || '').slice(0, 10),
+    })
+  }).catch(e => flash(e.message))
+  useEffect(() => { load() }, [id])
+  const done = (t) => { setOk(t); onChange && onChange(); setTimeout(() => setOk(null), 3000) }
+  const set = (k) => (e) => setProfile({ ...profile, [k]: e.target.value })
+  const saveProfile = async () => { try { await api(`/admin/members/${id}/profile`, { method: 'PUT', body: profile }); done('Profile saved.'); load() } catch (e) { flash(e.message) } }
+  const topup = async (a) => { try { const r = await api(`/admin/members/${id}/wallet/topup`, { method: 'POST', body: { amount: Number(a) } }); setAmt(''); done('Wallet credited — balance ' + money(r.wallet_balance)); load() } catch (e) { flash(e.message) } }
+  const charge = async () => { try { await api(`/admin/members/${id}/charge`, { method: 'POST', body: { ...chg, amount: Number(chg.amount) } }); setChg({ amount: '', description: '', deduct: true }); done('Charge recorded.'); load() } catch (e) { flash(e.message) } }
+  const setStatus = async (status) => { try { await api(`/admin/members/${id}/status`, { method: 'POST', body: { status } }); done('Status updated.'); load() } catch (e) { flash(e.message) } }
+  const addDoc = async () => { if (!doc.doc_type) return; try { await api(`/admin/members/${id}/documents`, { method: 'POST', body: doc }); setDoc({ doc_type: 'Aadhaar', reference: '', file_url: '' }); done('Document added.'); load() } catch (e) { flash(e.message) } }
+  const delDoc = async (docId) => { try { await api(`/admin/members/${id}/documents/${docId}`, { method: 'DELETE' }); load() } catch (e) { flash(e.message) } }
+
+  const close = (e) => { if (e.target.classList.contains('pt-drawer')) onClose() }
+  const m = data?.member
+
   return (
-    <div className="pt-panel" style={{ marginTop: '1.2rem', borderColor: 'var(--brass)' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h3 style={{ margin: 0 }}>{m.name} · {m.member_no || 'unassigned'} · Wallet {money(m.wallet_balance)}</h3>
-        <button className="pt-link" onClick={onClose}>Close ✕</button>
-      </div>
-      {err && <div className="pt-msg pt-msg--err">{err}</div>}
-      {ok && <div className="pt-msg pt-msg--ok">{ok}</div>}
-      <div className="pt-grid pt-grid--2" style={{ marginTop: '0.8rem' }}>
-        <div>
-          <h3>Top up wallet</h3>
-          <div className="pt-row">
-            <div className="pt-field"><label>Amount (₹)</label><input type="number" value={amt} onChange={e => setAmt(e.target.value)} /></div>
-            <button className="pt-btn pt-btn--brass" onClick={topup}>Add credit</button>
+    <div className="pt-drawer" onClick={close}>
+      <div className="pt-drawer-card">
+        {!data ? <p className="pt-muted">Loading…</p> : <>
+          <div className="pt-drawer-head">
+            <div>
+              <h3>{m.name} {m.member_no && <span className="pt-muted">· {m.member_no}</span>}</h3>
+              <span className={`pt-badge ${m.status}`}>{m.status}</span> <span className="pt-muted">{m.email}</span>
+              <div className="pt-muted" style={{ marginTop: '0.2rem' }}>{m.membership_type || 'No plan'} · joined {m.joined_at ? new Date(m.joined_at).toLocaleDateString('en-IN') : '—'}</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div className="pt-drawer-bal">{money(m.wallet_balance)}</div>
+              <div className="pt-muted" style={{ fontSize: '0.75rem' }}>wallet balance</div>
+              <button className="pt-link" style={{ marginTop: '0.4rem' }} onClick={onClose}>Close ✕</button>
+            </div>
           </div>
-        </div>
-        <div>
-          <h3>Raise a charge</h3>
+          {err && <div className="pt-msg pt-msg--err">{err}</div>}
+          {ok && <div className="pt-msg pt-msg--ok">{ok}</div>}
+
+          <h4 className="pt-drawer-h">Profile &amp; KYC</h4>
           <div className="pt-row">
-            <div className="pt-field"><label>Amount (₹)</label><input type="number" value={chg.amount} onChange={e => setChg({ ...chg, amount: e.target.value })} /></div>
-            <div className="pt-field"><label>Description</label><input value={chg.description} onChange={e => setChg({ ...chg, description: e.target.value })} placeholder="e.g. Bar tab" /></div>
+            <div className="pt-field"><label>Name</label><input value={profile.name} onChange={set('name')} /></div>
+            <div className="pt-field"><label>Phone</label><input value={profile.phone} onChange={set('phone')} /></div>
+            <div className="pt-field"><label>Occupation</label><input value={profile.occupation} onChange={set('occupation')} /></div>
           </div>
-          <label className="pt-muted"><input type="checkbox" checked={chg.deduct} onChange={e => setChg({ ...chg, deduct: e.target.checked })} /> Deduct from wallet now</label>
-          <div><button className="pt-btn pt-btn--sm" style={{ marginTop: '0.5rem' }} onClick={charge}>Add charge</button></div>
-        </div>
-      </div>
-      <div style={{ marginTop: '1rem' }}>
-        {m.status === 'active'
-          ? <button className="pt-btn pt-btn--sm pt-btn--danger" onClick={() => setStatus('suspended')}>Suspend member</button>
-          : <button className="pt-btn pt-btn--sm" onClick={() => setStatus('active')}>Re-activate member</button>}
+          <div className="pt-row">
+            <div className="pt-field"><label>Aadhaar no.</label><input value={profile.aadhaar} onChange={set('aadhaar')} /></div>
+            <div className="pt-field"><label>PAN no.</label><input value={profile.pan} onChange={set('pan')} /></div>
+            <div className="pt-field"><label>Joined date</label><input type="date" value={profile.joined_at} onChange={set('joined_at')} /></div>
+          </div>
+          <div className="pt-field"><label>Address</label><input value={profile.address} onChange={set('address')} /></div>
+          <button className="pt-btn pt-btn--sm" onClick={saveProfile}>Save profile</button>
+
+          <h4 className="pt-drawer-h">Documents</h4>
+          <div className="pt-scroll"><table className="pt-table">
+            <thead><tr><th>Type</th><th>Reference</th><th>File</th><th></th></tr></thead>
+            <tbody>
+              {data.documents.length === 0 && <tr><td colSpan="4" className="pt-empty">No documents yet.</td></tr>}
+              {data.documents.map(d => <tr key={d.id}>
+                <td>{d.doc_type}</td><td>{d.reference || '—'}</td>
+                <td>{d.file_url ? <a href={d.file_url} target="_blank" rel="noreferrer" className="pt-link">View</a> : '—'}</td>
+                <td><button className="pt-btn pt-btn--sm pt-btn--danger" onClick={() => delDoc(d.id)}>✕</button></td>
+              </tr>)}
+            </tbody>
+          </table></div>
+          <div className="pt-row" style={{ marginTop: '0.6rem' }}>
+            <div className="pt-field"><label>Type</label>
+              <select value={doc.doc_type} onChange={e => setDoc({ ...doc, doc_type: e.target.value })}>
+                {['Aadhaar', 'PAN', 'Photo', 'Address Proof', 'Other'].map(t => <option key={t}>{t}</option>)}
+              </select></div>
+            <div className="pt-field"><label>Reference / number</label><input value={doc.reference} onChange={e => setDoc({ ...doc, reference: e.target.value })} /></div>
+            <div className="pt-field" style={{ flex: 2 }}><label>File link (optional)</label><input value={doc.file_url} onChange={e => setDoc({ ...doc, file_url: e.target.value })} placeholder="https://…" /></div>
+            <button className="pt-btn pt-btn--sm" onClick={addDoc}>Add document</button>
+          </div>
+
+          <h4 className="pt-drawer-h">Wallet</h4>
+          <div className="pt-row">
+            <button className="pt-btn pt-btn--brass pt-btn--sm" onClick={() => topup(20000)}>Recharge ₹20,000</button>
+            <div className="pt-field" style={{ maxWidth: 160 }}><label>Custom credit (₹)</label><input type="number" value={amt} onChange={e => setAmt(e.target.value)} /></div>
+            <button className="pt-btn pt-btn--sm" onClick={() => amt && topup(amt)}>Add credit</button>
+          </div>
+          <div className="pt-row" style={{ marginTop: '0.5rem' }}>
+            <div className="pt-field"><label>Charge amount (₹)</label><input type="number" value={chg.amount} onChange={e => setChg({ ...chg, amount: e.target.value })} /></div>
+            <div className="pt-field" style={{ flex: 2 }}><label>Charge for</label><input value={chg.description} onChange={e => setChg({ ...chg, description: e.target.value })} placeholder="e.g. Bar tab, dinner, breakfast" /></div>
+            <label className="pt-muted" style={{ alignSelf: 'center' }}><input type="checkbox" checked={chg.deduct} onChange={e => setChg({ ...chg, deduct: e.target.checked })} /> deduct now</label>
+            <button className="pt-btn pt-btn--sm" onClick={charge}>Add charge</button>
+          </div>
+          <h4 className="pt-drawer-h" style={{ fontSize: '0.92rem' }}>Recent transactions</h4>
+          <div className="pt-scroll"><table className="pt-table">
+            <thead><tr><th>Date</th><th>Detail</th><th>Type</th><th className="pt-right">Amount</th><th className="pt-right">Balance</th></tr></thead>
+            <tbody>
+              {data.transactions.length === 0 && <tr><td colSpan="5" className="pt-empty">No transactions.</td></tr>}
+              {data.transactions.map(t => <tr key={t.id}>
+                <td>{new Date(t.created_at).toLocaleDateString('en-IN')}</td><td>{t.reason || '—'}</td>
+                <td><span className={`pt-badge ${t.type}`}>{t.type}</span></td>
+                <td className="pt-right">{t.type === 'debit' ? '−' : '+'}{money(t.amount)}</td>
+                <td className="pt-right">{money(t.balance_after)}</td>
+              </tr>)}
+            </tbody>
+          </table></div>
+
+          <div style={{ marginTop: '1.2rem', borderTop: '1px solid var(--line)', paddingTop: '1rem' }}>
+            {m.status === 'active'
+              ? <button className="pt-btn pt-btn--sm pt-btn--danger" onClick={() => setStatus('suspended')}>Suspend member</button>
+              : <button className="pt-btn pt-btn--sm" onClick={() => setStatus('active')}>Re-activate member</button>}
+          </div>
+        </>}
       </div>
     </div>
   )

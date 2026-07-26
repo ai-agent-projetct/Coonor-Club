@@ -40,7 +40,33 @@ router.get('/members/:id', ah(async (req, res) => {
   delete m.password_hash
   const [tx] = await pool.query(
     'SELECT id, type, amount, balance_after, reason, created_at FROM wallet_transactions WHERE member_id = ? ORDER BY id DESC LIMIT 30', [req.params.id])
-  res.json({ member: m, transactions: tx })
+  const [documents] = await pool.query(
+    'SELECT id, doc_type, reference, file_url, created_at FROM member_documents WHERE member_id = ? ORDER BY id DESC', [req.params.id])
+  res.json({ member: m, transactions: tx, documents })
+}))
+
+/* Update a member's profile / KYC details */
+router.put('/members/:id/profile', ah(async (req, res) => {
+  const allowed = ['name', 'phone', 'aadhaar', 'pan', 'address', 'occupation', 'joined_at']
+  const cols = allowed.filter((f) => req.body[f] !== undefined)
+  if (!cols.length) return res.status(400).json({ error: 'No fields to update' })
+  await pool.query(`UPDATE members SET ${cols.map((c) => `${c}=?`).join(',')} WHERE id = ?`,
+    [...cols.map((f) => req.body[f] || null), req.params.id])
+  res.json({ id: Number(req.params.id) })
+}))
+
+/* Documents (KYC) */
+router.post('/members/:id/documents', ah(async (req, res) => {
+  const { doc_type, reference, file_url } = req.body || {}
+  if (!doc_type) return res.status(400).json({ error: 'Document type is required' })
+  const [r] = await pool.query(
+    'INSERT INTO member_documents (member_id, doc_type, reference, file_url, created_by) VALUES (?,?,?,?,?)',
+    [req.params.id, doc_type, reference || null, file_url || null, req.user.id])
+  res.status(201).json({ id: r.insertId })
+}))
+router.delete('/members/:id/documents/:docId', ah(async (req, res) => {
+  await pool.query('DELETE FROM member_documents WHERE id = ? AND member_id = ?', [req.params.docId, req.params.id])
+  res.json({ deleted: Number(req.params.docId) })
 }))
 
 /* Approve → active, assign member number + plan */

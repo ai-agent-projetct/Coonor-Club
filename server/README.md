@@ -22,9 +22,10 @@ Node.js + Express · MySQL 8 (`mysql2`) · JWT auth (`bcryptjs` + `jsonwebtoken`
    ```
    *(or open `db/schema.sql` in MySQL Workbench and run it)*
 
-3. **Install & seed a default admin + sample data**
+3. **Install, migrate & seed a default admin + sample data**
    ```bash
    npm install
+   npm run migrate   # idempotent — also run this on an EXISTING db to add new columns/tables
    npm run seed
    ```
 

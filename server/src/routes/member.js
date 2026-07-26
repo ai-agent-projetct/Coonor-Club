@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { pool } from '../db.js'
 import { authenticate, requireRole } from '../middleware/auth.js'
-import { debitWallet, creditWallet, ah } from '../lib/wallet.js'
+import { debitWallet, creditWallet, ah, LOW_BALANCE, RECHARGE_AMOUNT } from '../lib/wallet.js'
 
 const router = Router()
 router.use(authenticate, requireRole('member'))
@@ -12,13 +12,47 @@ const VENUES = [
   { key: 'rajbar', name: 'The Raj Bar' },
 ]
 
-/* Wallet balance + recent ledger */
+/* Wallet balance + recent ledger + low-balance flag */
 router.get('/wallet', ah(async (req, res) => {
   const [[m]] = await pool.query('SELECT wallet_balance FROM members WHERE id = ?', [req.user.id])
   const [tx] = await pool.query(
     `SELECT id, type, amount, balance_after, reason, reference_type, created_at
        FROM wallet_transactions WHERE member_id = ? ORDER BY id DESC LIMIT 50`, [req.user.id])
-  res.json({ balance: m ? m.wallet_balance : 0, transactions: tx })
+  const balance = m ? Number(m.wallet_balance) : 0
+  res.json({
+    balance, transactions: tx,
+    low_balance: balance <= LOW_BALANCE,
+    low_threshold: LOW_BALANCE,
+    recharge_amount: RECHARGE_AMOUNT,
+  })
+}))
+
+/* Wallet recharge — TEST MODE. The payment gateway (GPay/UPI/Card) is not yet
+   live; this simulates a successful ₹20,000 recharge so the flow is usable. */
+router.post('/wallet/recharge', ah(async (req, res) => {
+  const method = (req.body && req.body.method) || 'Test'
+  const amount = Number((req.body && req.body.amount) || RECHARGE_AMOUNT)
+  if (!(amount > 0)) return res.status(400).json({ error: 'Invalid amount' })
+  const conn = await pool.getConnection()
+  try {
+    await conn.beginTransaction()
+    const balance = await creditWallet(conn, req.user.id, amount,
+      { reason: `Wallet recharge via ${method} (TEST)`, refType: 'topup' })
+    await conn.commit()
+    res.json({ wallet_balance: balance, amount, method, test: true })
+  } catch (e) { await conn.rollback(); throw e } finally { conn.release() }
+}))
+
+/* Notifications (low-balance alerts, etc.) */
+router.get('/notifications', ah(async (req, res) => {
+  const [rows] = await pool.query(
+    'SELECT id, message, kind, is_read, created_at FROM notifications WHERE member_id = ? ORDER BY id DESC LIMIT 30',
+    [req.user.id])
+  res.json(rows)
+}))
+router.post('/notifications/read', ah(async (req, res) => {
+  await pool.query('UPDATE notifications SET is_read = 1 WHERE member_id = ?', [req.user.id])
+  res.json({ ok: true })
 }))
 
 /* What a member can book */
