@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import './Membership.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,7 +35,7 @@ const benefits = [
   },
   {
     title: 'Reciprocal Privileges',
-    desc: 'Access to 70+ affiliated clubs across India.',
+    desc: 'Access to 80 affiliated clubs across India.',
     icon: '🤝'
   }
 ];
@@ -106,12 +107,6 @@ function AccordionItem({ affiliate, isOpen, onClick }) {
 
 export default function Membership() {
   const [openRegion, setOpenRegion] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '', email: '', phone: '', club: '', message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -171,22 +166,6 @@ export default function Membership() {
     return () => ctx.revert();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Enquiry Form Submitted:', formData);
-      setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
-  };
-
   return (
     <div className="membership-page" ref={containerRef}>
       <section className="membership-hero">
@@ -215,7 +194,7 @@ export default function Membership() {
       <section className="membership-affiliates">
         <div className="membership-container">
           <h2 className="section-title">Our Affiliate Network</h2>
-          <p className="section-subtitle">Access to 70+ prestigious clubs across India</p>
+          <p className="section-subtitle">Access to 80 prestigious clubs across India</p>
           <div className="accordion-container">
             {affiliates.map((affiliate, idx) => (
               <AccordionItem
@@ -231,42 +210,19 @@ export default function Membership() {
 
       <section className="membership-enquiry">
         <div className="membership-container">
-          <h2 className="section-title">Membership Enquiry</h2>
-          <p className="section-subtitle">Express your interest in joining the Coonoor Club fellowship</p>
-          
-          <div className="form-container">
-            {isSuccess ? (
-              <div className="form-success">
-                <h3>Thank You</h3>
-                <p>Your enquiry has been received. Our membership committee will get back to you shortly.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="name">Full Name</label>
-                  <input type="text" id="name" name="name" className="form-control" value={formData.name} onChange={handleInputChange} required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">Email Address</label>
-                  <input type="email" id="email" name="email" className="form-control" value={formData.email} onChange={handleInputChange} required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="phone">Phone Number</label>
-                  <input type="tel" id="phone" name="phone" className="form-control" value={formData.phone} onChange={handleInputChange} required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="club">Current Club Affiliation (Optional)</label>
-                  <input type="text" id="club" name="club" className="form-control" value={formData.club} onChange={handleInputChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="message">Message</label>
-                  <textarea id="message" name="message" className="form-control" value={formData.message} onChange={handleInputChange} required></textarea>
-                </div>
-                <button type="submit" className="btn-submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
-                </button>
-              </form>
-            )}
+          <h2 className="section-title">Apply for Membership</h2>
+          <p className="section-subtitle">Open to ladies and gentlemen of standing, aged 21 and above.</p>
+
+          <div className="form-container membership-cta">
+            <p>
+              Begin your application online through the Membership portal. Each application is
+              reviewed by the club committee — once approved, you can sign in to book stays,
+              dining, sports and play areas, and manage your club wallet.
+            </p>
+            <div className="membership-cta-actions">
+              <Link to="/login" className="btn-submit">Begin Your Application</Link>
+              <Link to="/contact" className="btn-outline-dark">Contact the Office</Link>
+            </div>
           </div>
         </div>
       </section>

@@ -64,7 +64,9 @@ export default function MemberAuth() {
           )}
 
           <div style={{ textAlign: 'center', marginTop: '1.2rem' }}>
-            <Link className="pt-link" to="/">← Back to website</Link>
+            <Link className="pt-link" to="/membership">About membership</Link>
+            <span style={{ margin: '0 0.5rem', color: '#ccc' }}>·</span>
+            <Link className="pt-link" to="/">Website</Link>
             <span style={{ margin: '0 0.5rem', color: '#ccc' }}>·</span>
             <Link className="pt-link" to="/admin/login">Admin login</Link>
           </div>

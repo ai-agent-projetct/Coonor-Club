@@ -12,6 +12,7 @@ import Dining from './pages/Dining'
 import Accommodation from './pages/Accommodation'
 import Sports from './pages/Sports'
 import Facilities from './pages/Facilities'
+import Membership from './pages/Membership'
 import Events from './pages/Events'
 import Contact from './pages/Contact'
 import MemberAuth from './portal/MemberAuth'
@@ -24,8 +25,10 @@ export default function App() {
   const location = useLocation()
 
   // The portal / admin dashboards render on their own — no marketing chrome,
-  // no smooth-scroll, no cursor trail.
-  const isPortal = ['/login', '/members', '/admin'].some((p) => location.pathname.startsWith(p))
+  // no smooth-scroll, no cursor trail. Match the exact path or a sub-path only,
+  // so e.g. /membership is NOT mistaken for the /members portal.
+  const path = location.pathname
+  const isPortal = ['/login', '/members', '/admin'].some((p) => path === p || path.startsWith(p + '/'))
 
   if (isPortal) {
     return (
@@ -50,6 +53,7 @@ export default function App() {
           <Route path="/accommodation" element={<PageTransition><Accommodation /></PageTransition>} />
           <Route path="/sports" element={<PageTransition><Sports /></PageTransition>} />
           <Route path="/facilities" element={<PageTransition><Facilities /></PageTransition>} />
+          <Route path="/membership" element={<PageTransition><Membership /></PageTransition>} />
           <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
         </Routes>
