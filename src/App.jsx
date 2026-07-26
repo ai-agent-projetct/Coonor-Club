@@ -14,10 +14,29 @@ import Sports from './pages/Sports'
 import Membership from './pages/Membership'
 import Events from './pages/Events'
 import Contact from './pages/Contact'
+import MemberAuth from './portal/MemberAuth'
+import MemberDashboard from './portal/MemberDashboard'
+import AdminLogin from './portal/AdminLogin'
+import AdminPanel from './portal/AdminPanel'
 import './App.css'
 
 export default function App() {
   const location = useLocation()
+
+  // The portal / admin dashboards render on their own — no marketing chrome,
+  // no smooth-scroll, no cursor trail.
+  const isPortal = ['/login', '/members', '/admin'].some((p) => location.pathname.startsWith(p))
+
+  if (isPortal) {
+    return (
+      <Routes location={location}>
+        <Route path="/login" element={<MemberAuth />} />
+        <Route path="/members" element={<MemberDashboard />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminPanel />} />
+      </Routes>
+    )
+  }
 
   return (
     <SmoothScroll>

@@ -12,6 +12,7 @@ const navLinks = [
   { path: '/membership', label: 'Membership' },
   { path: '/events', label: 'Events' },
   { path: '/contact', label: 'Contact' },
+  { path: '/login', label: 'Member Login' },
 ]
 
 export default function Navbar() {

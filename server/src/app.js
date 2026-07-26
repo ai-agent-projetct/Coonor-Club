@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import authRoutes from './routes/auth.js'
+import memberRoutes from './routes/member.js'
+import adminRoutes from './routes/admin.js'
 import { ping } from './db.js'
 
 export const app = express()
@@ -20,13 +22,14 @@ app.get('/api/health', async (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
-
-// Later phases mount here: /api/member/* (bookings, wallet) and /api/admin/* (approvals, CRUD)
+app.use('/api/member', memberRoutes)
+app.use('/api/admin', adminRoutes)
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }))
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.error(err)
-  res.status(500).json({ error: 'Server error' })
+  const status = err.status || 500
+  if (status >= 500) console.error(err)
+  res.status(status).json({ error: status >= 500 ? 'Server error' : err.message })
 })
