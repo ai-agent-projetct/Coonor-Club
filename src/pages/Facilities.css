@@ -9,7 +9,7 @@
 .fac-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
 .fac-hero-overlay { position: absolute; inset: 0; background: linear-gradient(rgba(20,14,9,0.25), rgba(20,14,9,0.52)); }
 .fac-hero-content { position: relative; z-index: 2; padding: 0 1.5rem; max-width: 760px; }
-.fac-hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.6rem, 6vw, 4.4rem); margin: 0.5rem 0; }
+.fac-hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.2rem, 6.5vw, 5.4rem); margin: 0.5rem 0; text-shadow: 0 3px 20px rgba(0,0,0,0.5); }
 .fac-hero-content p { font-size: 1.1rem; color: rgba(255,255,255,0.9); }
 .fac-label {
   display: inline-block; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase;

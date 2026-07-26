@@ -77,6 +77,7 @@
   padding: 3rem;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  color: #1a1a1a;
 }
 
 .contact-info h3 {
@@ -89,6 +90,7 @@
 .contact-info p {
   margin-bottom: 1rem;
   line-height: 1.6;
+  color: #1a1a1a;
 }
 
 .contact-info strong {

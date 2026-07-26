@@ -111,7 +111,7 @@ const Dining = () => {
     <div className="dining-page" ref={containerRef}>
       {/* Hero */}
       <section className="dining-hero">
-        <div className="hero-bg" style={{ backgroundImage: 'url(/images/club-hall1.jpg)' }}></div>
+        <div className="hero-bg" style={{ backgroundImage: 'url(/images/club-dining1.jpg)' }}></div>
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <span className="hero-label">CULINARY HERITAGE</span>
@@ -123,7 +123,7 @@ const Dining = () => {
       {/* The Planters' Table */}
       <section className="split-section restaurant-section">
         <div className="split-image-container">
-          <img src="/images/club-hall1.jpg" alt="The Planters' Table" className="split-image" />
+          <img src="/images/club-planters.jpg" alt="The Planters' Table" className="split-image" />
         </div>
         <div className="split-content">
           <span className="section-eyebrow">Main Restaurant</span>
@@ -174,7 +174,7 @@ const Dining = () => {
           </div>
         </div>
         <div className="split-image-container">
-          <img src="/images/club-frontlawn.jpg" alt="The Veranda Tearoom" className="split-image" />
+          <img src="/images/club-veranda.jpg" alt="The Veranda Tearoom" className="split-image" />
         </div>
       </section>
 
