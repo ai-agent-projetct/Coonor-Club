@@ -33,7 +33,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(13, 13, 13, 0.5);
+  background: rgba(13, 13, 13, 0.34);
 }
 
 .events-hero-content {
@@ -181,3 +181,46 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Upcoming events (admin-managed) ── */
+.events-section-sub { text-align: center; color: #6b5b4b; margin: -1rem auto 2rem; max-width: 620px; }
+.upcoming-grid {
+  max-width: 1150px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.6rem;
+}
+.upcoming-card {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 16px 40px rgba(74,46,27,0.1); border: 1px solid rgba(74,46,27,0.06);
+  display: flex; flex-direction: column; transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.upcoming-card:hover { transform: translateY(-6px); box-shadow: 0 26px 56px rgba(74,46,27,0.18); }
+.upcoming-img { height: 180px; background-size: cover; background-position: center; }
+.upcoming-body { padding: 1.2rem 1.3rem 1.5rem; }
+.upcoming-date {
+  display: inline-block; background: var(--color-forest, #2e5a44); color: #fff;
+  padding: 0.28rem 0.9rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; margin-bottom: 0.7rem;
+}
+.upcoming-body h3 { font-family: 'Playfair Display', serif; color: var(--color-mahogany, #4a2e1b); font-size: 1.25rem; margin: 0 0 0.5rem; }
+.upcoming-body p { color: #6b5b4b; font-size: 0.94rem; line-height: 1.55; margin: 0; }
+
+/* ── YouTube video gallery ── */
+.video-grid {
+  max-width: 1150px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;
+}
+.video-card {
+  background: #fff; border-radius: 12px; overflow: hidden; cursor: pointer;
+  box-shadow: 0 14px 34px rgba(74,46,27,0.12); border: 1px solid rgba(74,46,27,0.06);
+  transition: transform 0.3s ease;
+}
+.video-card:hover { transform: translateY(-5px); }
+.video-thumb, .video-frame { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
+.video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.video-play {
+  position: absolute; inset: 0; margin: auto; width: 64px; height: 64px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(184,20,20,0.92); color: #fff; border-radius: 50%; font-size: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35); transition: transform 0.25s ease, background 0.25s ease;
+}
+.video-card:hover .video-play { transform: scale(1.1); background: rgba(220,20,20,0.98); }
+.video-title { padding: 0.9rem 1.1rem; font-weight: 600; color: var(--color-mahogany, #4a2e1b); font-size: 0.98rem; }

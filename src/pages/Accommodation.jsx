@@ -105,7 +105,7 @@ const Accommodation = () => {
 
             <div className="room-card">
               <div className="room-image-wrapper">
-                <div className="room-image" style={{ backgroundImage: 'url(/images/club-event3.jpg)' }}></div>
+                <div className="room-image" style={{ backgroundImage: 'url(/images/club-sitting.jpg)' }}></div>
               </div>
               <div className="room-details">
                 <h3>Garden Cottage</h3>
@@ -115,7 +115,7 @@ const Accommodation = () => {
 
             <div className="room-card">
               <div className="room-image-wrapper">
-                <div className="room-image" style={{ backgroundImage: 'url(/images/guest-room.jpg)' }}></div>
+                <div className="room-image" style={{ backgroundImage: 'url(/images/club-event3.jpg)' }}></div>
               </div>
               <div className="room-details">
                 <h3>Colonial Room</h3>

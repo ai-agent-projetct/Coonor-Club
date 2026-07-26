@@ -186,3 +186,16 @@ CREATE TABLE IF NOT EXISTS events (
   created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_ev_admin FOREIGN KEY (created_by) REFERENCES admins(id)
 );
+
+-- ----- YouTube videos (admin-managed) -----------------------
+CREATE TABLE IF NOT EXISTS videos (
+  id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title        VARCHAR(180) NOT NULL,
+  youtube_id   VARCHAR(20) NOT NULL,
+  youtube_url  VARCHAR(300) NOT NULL,
+  sort         INT DEFAULT 0,
+  is_published TINYINT(1) NOT NULL DEFAULT 1,
+  created_by   INT,
+  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_vid_admin FOREIGN KEY (created_by) REFERENCES admins(id)
+);

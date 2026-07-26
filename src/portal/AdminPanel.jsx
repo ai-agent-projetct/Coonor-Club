@@ -6,7 +6,7 @@ import './portal.css'
 const TABS = [
   ['dashboard', 'Dashboard'], ['approvals', 'Approvals'], ['members', 'Members'],
   ['bookings', 'Bookings'], ['rooms', 'Rooms'], ['play', 'Play Areas'],
-  ['menu', 'Menu & Bar'], ['gallery', 'Gallery'], ['events', 'Events'],
+  ['menu', 'Menu & Bar'], ['gallery', 'Gallery'], ['events', 'Events'], ['videos', 'Videos'],
 ]
 
 export default function AdminPanel() {
@@ -42,9 +42,10 @@ export default function AdminPanel() {
         {tab === 'gallery' && <Crud endpoint="gallery" title="Gallery"
           fields={[['title', 'Title'], ['image_url', 'Image URL'], ['category', 'Category']]}
           columns={[['title', 'Title'], ['category', 'Category'], ['image_url', 'Image']]} />}
-        {tab === 'events' && <Crud endpoint="events" title="Events"
+        {tab === 'events' && <Crud endpoint="events" title="Events — add & edit upcoming events (shown on the public Events page)"
           fields={[['title', 'Title'], ['event_date', 'Date', 'date'], ['image_url', 'Image URL'], ['description', 'Description']]}
           columns={[['title', 'Title'], ['event_date', 'Date'], ['is_published', 'Live']]} />}
+        {tab === 'videos' && <Videos />}
       </div>
     </div>
   )
@@ -232,6 +233,41 @@ function Menu() {
         </tbody>
       </table></div>
       <p className="pt-muted" style={{ marginTop: '0.6rem' }}>Edit a price and click away to save. Categories are seeded per venue (Planters', Veranda, Raj Bar).</p>
+    </div>
+  )
+}
+
+/* YouTube video manager — admin pastes a link, the id is extracted server-side */
+function Videos() {
+  const [rows, setRows] = useState([]); const [f, setF] = useState({ title: '', youtube_url: '' }); const [err, flash] = useErr()
+  const load = () => api('/admin/videos').then(setRows).catch(e => flash(e.message))
+  useEffect(() => { load() }, [])
+  const add = async (e) => { e.preventDefault(); try { await api('/admin/videos', { method: 'POST', body: f }); setF({ title: '', youtube_url: '' }); load() } catch (e) { flash(e.message) } }
+  const del = async (id) => { if (!confirm('Remove this video?')) return; try { await api('/admin/videos/' + id, { method: 'DELETE' }); load() } catch (e) { flash(e.message) } }
+  return (
+    <div className="pt-panel">
+      <h2>YouTube Videos</h2>
+      {err && <div className="pt-msg pt-msg--err">{err}</div>}
+      <form className="pt-row" onSubmit={add} style={{ marginBottom: '1.2rem' }}>
+        <div className="pt-field"><label>Title</label><input value={f.title} onChange={e => setF({ ...f, title: e.target.value })} required /></div>
+        <div className="pt-field" style={{ flex: 2 }}><label>YouTube link</label>
+          <input value={f.youtube_url} onChange={e => setF({ ...f, youtube_url: e.target.value })} placeholder="https://www.youtube.com/watch?v=..." required /></div>
+        <button className="pt-btn">Add video</button>
+      </form>
+      <div className="pt-scroll"><table className="pt-table">
+        <thead><tr><th>Preview</th><th>Title</th><th>Video ID</th><th></th></tr></thead>
+        <tbody>
+          {rows.length === 0 && <tr><td colSpan="4" className="pt-empty">No videos yet.</td></tr>}
+          {rows.map(v => (
+            <tr key={v.id}>
+              <td><img src={`https://img.youtube.com/vi/${v.youtube_id}/default.jpg`} alt="" style={{ width: 84, borderRadius: 4, display: 'block' }} /></td>
+              <td>{v.title}</td><td>{v.youtube_id}</td>
+              <td><button className="pt-btn pt-btn--sm pt-btn--danger" onClick={() => del(v.id)}>✕</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table></div>
+      <p className="pt-muted" style={{ marginTop: '0.6rem' }}>These appear in the Videos section on the public Events page — click to play, double-click to open on YouTube.</p>
     </div>
   )
 }

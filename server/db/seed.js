@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 import bcrypt from 'bcryptjs'
 import { pool } from '../src/db.js'
+import { extractYouTubeId } from '../src/lib/youtube.js'
 
 async function seed() {
   // --- Default admin ---
@@ -79,6 +80,39 @@ async function seed() {
         'INSERT INTO menu_items (category_id, name, price, is_liquor) VALUES (?,?,?,?)',
         [catId, name, price, liquor])
     }
+  }
+
+  // --- YouTube videos (links provided by the club) ---
+  const videos = [
+    ['Coonoor Club — Feature', 'https://www.youtube.com/watch?v=PYfYpvK_t9k'],
+    ['Life at the Club', 'https://www.youtube.com/watch?v=9Do8uvrFKro'],
+    ['Nilgiri Heritage', 'https://www.youtube.com/watch?v=e_5GVXOjhMs'],
+    ['Club Moments', 'https://www.youtube.com/watch?v=X0_M0DeroZA'],
+    ['The Blue Mountains', 'https://www.youtube.com/watch?v=Mk5kLPdU5Ys'],
+    ['Around Coonoor', 'https://www.youtube.com/watch?v=rjj7pKsvsHI'],
+    ['Nilgiris Diaries', 'https://www.youtube.com/watch?v=w-EsL-d6HaU'],
+  ]
+  let vsort = 0
+  for (const [title, url] of videos) {
+    const yid = extractYouTubeId(url)
+    if (!yid) continue
+    const [ex] = await pool.query('SELECT id FROM videos WHERE youtube_id = ?', [yid])
+    if (!ex.length) await pool.query(
+      'INSERT INTO videos (title, youtube_id, youtube_url, sort) VALUES (?,?,?,?)', [title, yid, url, vsort])
+    vsort++
+  }
+
+  // --- Sample upcoming events ---
+  const events = [
+    ['Nilgiri High Tea on the Lawn', 'A grand afternoon of Nilgiri teas, savouries and cakes on the sunlit front lawn.', '2026-08-16', '/images/club-frontlawn.jpg'],
+    ['Annual Tennis Tournament', "The club's founding sport takes centre stage with members' singles and doubles.", '2026-09-06', '/images/club-tenniscourt.jpg'],
+    ['Sunday Night Live Music', 'An evening of live music and dining in the Grand Banquet Hall.', '2026-08-30', '/images/club-hall3.jpg'],
+    ['Christmas Dinner & Carols', "The club's cherished festive dinner, carols and celebrations.", '2026-12-24', '/images/club-hall1.jpg'],
+  ]
+  for (const [title, desc, date, img] of events) {
+    const [ex] = await pool.query('SELECT id FROM events WHERE title = ?', [title])
+    if (!ex.length) await pool.query(
+      'INSERT INTO events (title, description, event_date, image_url) VALUES (?,?,?,?)', [title, desc, date, img])
   }
 
   console.log('✓ seed complete')

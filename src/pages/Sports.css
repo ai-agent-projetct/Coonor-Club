@@ -54,7 +54,7 @@ h1, h2, h3 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(46, 90, 68, 0.6); /* forest tint overlay */
+  background: rgba(46, 90, 68, 0.42); /* forest tint overlay */
   z-index: 2;
 }
 

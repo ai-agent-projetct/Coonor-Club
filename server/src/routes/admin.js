@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { pool } from '../db.js'
 import { authenticate, requireRole } from '../middleware/auth.js'
 import { creditWallet, debitWallet, ah } from '../lib/wallet.js'
+import { extractYouTubeId } from '../lib/youtube.js'
 
 const router = Router()
 router.use(authenticate, requireRole('admin'))
@@ -162,6 +163,41 @@ crud('/rooms', 'rooms', ['name', 'room_type', 'description', 'price_per_night', 
 crud('/play-areas', 'play_areas', ['name', 'description', 'charge', 'charge_unit', 'image_url', 'is_active'])
 crud('/gallery', 'gallery_images', ['title', 'image_url', 'category'])
 crud('/events', 'events', ['title', 'description', 'event_date', 'image_url', 'is_published'])
+
+/* ───────── YouTube videos (admin adds a link; id is auto-extracted) ───────── */
+router.get('/videos', ah(async (req, res) => {
+  const [rows] = await pool.query('SELECT * FROM videos ORDER BY sort ASC, id ASC')
+  res.json(rows)
+}))
+router.post('/videos', ah(async (req, res) => {
+  const { title, youtube_url, sort } = req.body || {}
+  const yid = extractYouTubeId(youtube_url)
+  if (!title || !yid) return res.status(400).json({ error: 'A title and a valid YouTube link are required' })
+  const [r] = await pool.query(
+    'INSERT INTO videos (title, youtube_id, youtube_url, sort, created_by) VALUES (?,?,?,?,?)',
+    [title, yid, youtube_url, sort || 0, req.user.id])
+  res.status(201).json({ id: r.insertId, youtube_id: yid })
+}))
+router.put('/videos/:id', ah(async (req, res) => {
+  const { title, youtube_url, sort, is_published } = req.body || {}
+  const sets = [], vals = []
+  if (title !== undefined) { sets.push('title=?'); vals.push(title) }
+  if (youtube_url !== undefined) {
+    const yid = extractYouTubeId(youtube_url)
+    if (!yid) return res.status(400).json({ error: 'Invalid YouTube link' })
+    sets.push('youtube_url=?', 'youtube_id=?'); vals.push(youtube_url, yid)
+  }
+  if (sort !== undefined) { sets.push('sort=?'); vals.push(sort) }
+  if (is_published !== undefined) { sets.push('is_published=?'); vals.push(is_published ? 1 : 0) }
+  if (!sets.length) return res.status(400).json({ error: 'No fields to update' })
+  vals.push(req.params.id)
+  await pool.query(`UPDATE videos SET ${sets.join(',')} WHERE id = ?`, vals)
+  res.json({ id: Number(req.params.id) })
+}))
+router.delete('/videos/:id', ah(async (req, res) => {
+  await pool.query('DELETE FROM videos WHERE id = ?', [req.params.id])
+  res.json({ deleted: Number(req.params.id) })
+}))
 
 /* ───────── Menu (menu / liquor / price changes) ───────── */
 router.get('/menu', ah(async (req, res) => {

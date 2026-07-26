@@ -3,6 +3,7 @@ import cors from 'cors'
 import authRoutes from './routes/auth.js'
 import memberRoutes from './routes/member.js'
 import adminRoutes from './routes/admin.js'
+import publicRoutes from './routes/public.js'
 import { ping } from './db.js'
 
 export const app = express()
@@ -22,6 +23,7 @@ app.get('/api/health', async (req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api/public', publicRoutes)
 app.use('/api/member', memberRoutes)
 app.use('/api/admin', adminRoutes)
 

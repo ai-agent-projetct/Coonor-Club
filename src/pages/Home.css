@@ -41,7 +41,7 @@
 
 /* ── Hero Overlay (text on top of video) ── */
 .hero-overlay {
-  --veil: 0.5;
+  --veil: 0.22;
   position: absolute;
   inset: 0;
   display: flex;
@@ -49,9 +49,11 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  /* Light touch — only a soft focus behind the title + a faint base, so the
+     video reads clean and bright (no dull grey wash). */
   background:
-    radial-gradient(ellipse at center, rgba(0,0,0,calc(var(--veil) * 0.34)) 0%, rgba(0,0,0,var(--veil)) 100%),
-    linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 32%);
+    radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,var(--veil)) 0%, transparent 70%),
+    linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 24%);
   z-index: 2;
 }
 
