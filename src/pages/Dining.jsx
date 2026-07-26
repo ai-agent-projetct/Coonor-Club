@@ -86,6 +86,11 @@ const Dining = () => {
       gsap.from('.menu-card', {
         y: 50, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out',
         scrollTrigger: { trigger: '.menu-section', start: 'top 78%' },
+      })
+
+      gsap.from('.seasonal-card', {
+        y: 40, opacity: 0, duration: 0.7, stagger: 0.12, ease: 'power3.out',
+        scrollTrigger: { trigger: '.seasonal-section', start: 'top 80%' },
       });
 
       gsap.from('.lawn-content > *', {
@@ -230,6 +235,29 @@ const Dining = () => {
             On clear afternoons, tea, coffee and light snacks are served on the sunlit front lawns,
             with panoramic views across the Nilgiri hills.
           </p>
+        </div>
+      </section>
+
+      {/* Seasonal & Special Events */}
+      <section className="seasonal-section">
+        <div className="section-header">
+          <span className="section-eyebrow">Through the Year</span>
+          <h2>Seasonal &amp; Special Events</h2>
+          <p>Beyond the daily table, the club's calendar turns with the Nilgiri seasons.</p>
+        </div>
+        <div className="seasonal-grid">
+          {[
+            { icon: '🫖', title: 'Nilgiri High Tea', text: 'A grand afternoon spread of Nilgiri teas, savouries and cakes on the sunlit lawn.' },
+            { icon: '🍽️', title: 'Sunday Specials', text: "Rotating chef's specials and unhurried family lunches every Sunday." },
+            { icon: '🌧️', title: 'Monsoon Thali', text: 'A hearty regional thali served through the monsoon months (July–September).' },
+            { icon: '🎄', title: 'Christmas Dinner', text: "The club's cherished festive dinner, carols and celebrations each December." },
+          ].map((s) => (
+            <div className="seasonal-card" key={s.title}>
+              <div className="seasonal-icon">{s.icon}</div>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </div>
+          ))}
         </div>
       </section>
 

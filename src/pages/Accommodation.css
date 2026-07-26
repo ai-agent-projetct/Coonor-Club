@@ -252,3 +252,21 @@ h1, h2, h3 {
   .hero-title { font-size: 2.5rem; }
   .section-header h2 { font-size: 2rem; }
 }
+
+/* ── Life at the Club — moving gallery ── */
+.stay-gallery-section { padding: 5rem 0 5.5rem; background: var(--color-cream, #f7f4ec); overflow: hidden; }
+.stay-gallery-section .section-header { text-align: center; margin-bottom: 2.5rem; }
+.stay-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+.stay-marquee-track { display: flex; width: max-content; animation: stayScroll 50s linear infinite; will-change: transform; }
+.stay-marquee:hover .stay-marquee-track { animation-play-state: paused; }
+@keyframes stayScroll { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.stay-marquee-item { width: 320px; height: 220px; margin-right: 1.1rem; border-radius: 10px; overflow: hidden; flex-shrink: 0; box-shadow: 0 12px 30px rgba(74,46,27,0.12); }
+.stay-marquee-item img { width: 100%; height: 100%; object-fit: cover; }
+@media (prefers-reduced-motion: reduce) {
+  .stay-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .stay-marquee-track { animation: none; }
+}

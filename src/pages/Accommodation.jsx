@@ -75,7 +75,7 @@ const Accommodation = () => {
     <div className="accommodation-page">
       {/* Hero Section */}
       <section className="hero-section" ref={heroRef}>
-        <div className="hero-bg" style={{ backgroundImage: 'url(/images/guest-room.jpg)' }}></div>
+        <div className="hero-bg" style={{ backgroundImage: 'url(/images/club-sitting.jpg)' }}></div>
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <span className="hero-label">HERITAGE ACCOMMODATION</span>
@@ -95,7 +95,7 @@ const Accommodation = () => {
           <div className="rooms-grid">
             <div className="room-card">
               <div className="room-image-wrapper">
-                <div className="room-image" style={{ backgroundImage: 'url(/images/guest-room.jpg)' }}></div>
+                <div className="room-image" style={{ backgroundImage: 'url(/images/club-event1.jpg)' }}></div>
               </div>
               <div className="room-details">
                 <h3>Heritage Suite</h3>
@@ -105,7 +105,7 @@ const Accommodation = () => {
 
             <div className="room-card">
               <div className="room-image-wrapper">
-                <div className="room-image" style={{ backgroundImage: 'url(/images/real-sports-ground.jpg)' }}></div>
+                <div className="room-image" style={{ backgroundImage: 'url(/images/club-event3.jpg)' }}></div>
               </div>
               <div className="room-details">
                 <h3>Garden Cottage</h3>
@@ -115,7 +115,7 @@ const Accommodation = () => {
 
             <div className="room-card">
               <div className="room-image-wrapper">
-                <div className="room-image" style={{ backgroundImage: 'url(/images/real-heritage-cottage.jpg)' }}></div>
+                <div className="room-image" style={{ backgroundImage: 'url(/images/guest-room.jpg)' }}></div>
               </div>
               <div className="room-details">
                 <h3>Colonial Room</h3>
@@ -139,6 +139,25 @@ const Accommodation = () => {
             <div className="amenity-item">🌲 Garden View</div>
             <div className="amenity-item">🛎️ Room Service</div>
             <div className="amenity-item">🧹 Housekeeping</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Life at the Club — auto-scrolling gallery */}
+      <section className="stay-gallery-section">
+        <div className="container">
+          <div className="section-header"><h2>Life at the Club</h2>
+            <p>A glimpse of the rooms, lounges and grounds that await your stay.</p></div>
+        </div>
+        <div className="stay-marquee">
+          <div className="stay-marquee-track">
+            {[...['club-event1.jpg', 'club-sitting.jpg', 'club-event3.jpg', 'club-event2.jpg', 'club-hall2.jpg', 'club-rooftop.jpg', 'club-frontlawn.jpg', 'guest-room.jpg', 'club-outsideview.jpg', 'real-cottage.jpg'],
+              ...['club-event1.jpg', 'club-sitting.jpg', 'club-event3.jpg', 'club-event2.jpg', 'club-hall2.jpg', 'club-rooftop.jpg', 'club-frontlawn.jpg', 'guest-room.jpg', 'club-outsideview.jpg', 'real-cottage.jpg']]
+              .map((src, i) => (
+                <div className="stay-marquee-item" key={i} aria-hidden={i >= 10}>
+                  <img src={`/images/${src}`} alt="" loading="lazy" />
+                </div>
+              ))}
           </div>
         </div>
       </section>

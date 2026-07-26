@@ -1,0 +1,52 @@
+.fac-page { background: var(--color-cream, #f7f4ec); }
+
+/* Hero */
+.fac-hero {
+  position: relative; height: 62vh; min-height: 420px;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  color: var(--color-cream, #f7f4ec); overflow: hidden;
+}
+.fac-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.fac-hero-overlay { position: absolute; inset: 0; background: linear-gradient(rgba(20,14,9,0.4), rgba(20,14,9,0.72)); }
+.fac-hero-content { position: relative; z-index: 2; padding: 0 1.5rem; max-width: 760px; }
+.fac-hero-content h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.6rem, 6vw, 4.4rem); margin: 0.5rem 0; }
+.fac-hero-content p { font-size: 1.1rem; color: rgba(255,255,255,0.9); }
+.fac-label {
+  display: inline-block; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--color-brass, #d4af37); font-weight: 600;
+}
+
+/* Grid */
+.fac-section { padding: 5rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+.fac-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.6rem; }
+.fac-card {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 16px 40px rgba(74,46,27,0.1); border: 1px solid rgba(74,46,27,0.06);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.fac-card:hover { transform: translateY(-6px); box-shadow: 0 26px 60px rgba(74,46,27,0.18); }
+.fac-card-img { height: 210px; background-size: cover; background-position: center; transition: transform 0.6s ease; }
+.fac-card:hover .fac-card-img { transform: scale(1.06); }
+.fac-card-body { padding: 1.3rem 1.4rem 1.6rem; }
+.fac-card-body h3 { font-family: 'Playfair Display', serif; color: var(--color-mahogany, #4a2e1b); font-size: 1.3rem; margin: 0 0 0.4rem; }
+.fac-card-body p { color: #6b5b4b; font-size: 0.95rem; line-height: 1.55; margin: 0; }
+
+/* Auto-scrolling gallery */
+.fac-gallery { padding: 2rem 0 6rem; overflow: hidden; }
+.fac-gallery-header { text-align: center; margin-bottom: 2.4rem; }
+.fac-gallery-header h2 { font-family: 'Playfair Display', serif; color: var(--color-mahogany, #4a2e1b); font-size: clamp(2rem, 4vw, 2.8rem); margin: 0.4rem 0 0; }
+.fac-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+.fac-marquee-track { display: flex; width: max-content; animation: facScroll 55s linear infinite; will-change: transform; }
+.fac-marquee:hover .fac-marquee-track { animation-play-state: paused; }
+@keyframes facScroll { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.fac-marquee-item { width: 340px; height: 230px; margin-right: 1.2rem; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.fac-marquee-item img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fac-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .fac-marquee-track { animation: none; }
+}

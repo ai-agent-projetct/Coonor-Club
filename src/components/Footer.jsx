@@ -6,7 +6,7 @@ const footerLinks = [
   { label: 'Dining', path: '/dining' },
   { label: 'Stay', path: '/accommodation' },
   { label: 'Sports', path: '/sports' },
-  { label: 'Membership', path: '/membership' },
+  { label: 'Facilities', path: '/facilities' },
   { label: 'Events', path: '/events' },
   { label: 'Contact', path: '/contact' },
 ]

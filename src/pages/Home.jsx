@@ -118,7 +118,7 @@ function ScrollVideo() {
             </p>
             <div className="hero-cta-row">
               <Link to="/heritage" className="btn btn-primary"><span>Discover Our Legacy</span></Link>
-              <Link to="/membership" className="btn btn-outline"><span>Become a Member</span></Link>
+              <Link to="/login" className="btn btn-outline"><span>Become a Member</span></Link>
             </div>
           </div>
           <div className="scroll-indicator">
@@ -406,7 +406,7 @@ export default function Home() {
             <span className="text-label" style={{ color: '#D4AF37' }}>Join the Fellowship</span>
             <h2>Begin Your Legacy</h2>
             <p>Join a fellowship of distinguished members spanning over a century of tradition in the Nilgiris.</p>
-            <Link to="/membership" className="btn btn-primary"><span>Discover Membership</span></Link>
+            <Link to="/login" className="btn btn-primary"><span>Become a Member</span></Link>
           </div>
         </section>
 

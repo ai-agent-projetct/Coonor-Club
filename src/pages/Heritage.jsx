@@ -51,16 +51,18 @@ const Heritage = () => {
         }
       });
 
-      // Values animation
-      gsap.from('.value-card', {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: '.values-section',
-          start: 'top 75%',
-        }
+      // Journey, Objects & Committee reveals
+      gsap.from('.journey-item', {
+        y: 50, opacity: 0, duration: 0.7, stagger: 0.12, ease: 'power3.out',
+        scrollTrigger: { trigger: '.journey-grid', start: 'top 80%' },
+      });
+      gsap.from('.object-card', {
+        y: 50, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out',
+        scrollTrigger: { trigger: '.objects-section', start: 'top 78%' },
+      });
+      gsap.from('.committee-card', {
+        y: 40, opacity: 0, duration: 0.7, stagger: 0.12, ease: 'power3.out',
+        scrollTrigger: { trigger: '.committee-section', start: 'top 80%' },
       });
 
     }, containerRef);
@@ -159,30 +161,75 @@ const Heritage = () => {
         </div>
       </section>
 
-      {/* Values Section */}
-      <section className="values-section">
+      {/* Our Journey */}
+      <section className="journey-section">
         <div className="section-header">
-          <h2>The Spirit of the Club</h2>
+          <h2>Our Journey</h2>
           <div className="header-divider"></div>
         </div>
-        
-        <div className="values-grid">
-          <div className="value-card">
-            <div className="value-icon">🏛️</div>
-            <h3>Heritage</h3>
-            <p>Preserving 140 years of colonial and Indian history</p>
-          </div>
-          <div className="value-card">
-            <div className="value-icon">🤝</div>
-            <h3>Community</h3>
-            <p>"There are no strangers. Just friends you have not met"</p>
-          </div>
-          <div className="value-card">
-            <div className="value-icon">⭐</div>
-            <h3>Excellence</h3>
-            <p>Maintaining the highest standards of hospitality</p>
-          </div>
+        <div className="journey-grid">
+          {[
+            { year: '1885', img: 'club-1885.jpg', text: "Founded as Coonoor's premier social venue." },
+            { year: '1902', img: 'club-1902.png', text: 'Colonial clubhouse completed with teak-panelled halls.' },
+            { year: '1924', img: 'club-1924.jpg', text: 'Tennis courts inaugurated; the Raj Bar established.' },
+            { year: '1947', img: 'club-1947.jpg', text: 'Transitioned to Indian leadership after independence.' },
+            { year: '1991', img: 'club-1991.jpg', text: 'Registered under the Tamil Nadu Societies Act (No. 22).' },
+            { year: '2026', img: 'club-2026.jpg', text: 'Over 900 members and 80 affiliated clubs across India.' },
+          ].map((j) => (
+            <div className="journey-item" key={j.year}>
+              <div className="journey-img"><img src={`/images/${j.img}`} alt={`Coonoor Club ${j.year}`} loading="lazy" /></div>
+              <div className="journey-year">{j.year}</div>
+              <p>{j.text}</p>
+            </div>
+          ))}
         </div>
+      </section>
+
+      {/* Objects of the Club */}
+      <section className="objects-section">
+        <div className="section-header">
+          <h2>Objects of the Club</h2>
+          <p className="section-sub">As laid down in the Coonoor Club Bye-Laws, registered under the Tamil Nadu Societies Registration Act.</p>
+          <div className="header-divider"></div>
+        </div>
+        <div className="objects-grid">
+          {[
+            { icon: '🏛️', title: 'Social & Community', text: 'To provide a club in and around Coonoor for the accommodation of Members and their friends, and for the promotion of entertainments and pastimes.' },
+            { icon: '🏆', title: 'Sports & Recreation', text: 'To encourage sports and games — lawn tennis, badminton, billiards and indoor sports — and to organise competitions and sporting meets.' },
+            { icon: '🤝', title: 'Affiliated Club Access', text: 'Members enjoy reciprocal access to 80 affiliated clubs across India, on presentation of their Membership Card and letter of introduction.' },
+            { icon: '📚', title: 'Culture & Heritage', text: "To preserve the rich cultural heritage of the Nilgiris through the library, cultural evenings and the Club's 139-year colonial legacy." },
+          ].map((o) => (
+            <div className="object-card" key={o.title}>
+              <div className="object-icon">{o.icon}</div>
+              <h3>{o.title}</h3>
+              <p>{o.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Managing Committee */}
+      <section className="committee-section">
+        <div className="section-header">
+          <h2>Managing Committee</h2>
+          <p className="section-sub">The Club is governed by elected Permanent Members who serve voluntarily — elected at the Annual General Meeting and holding office until the next AGM.</p>
+          <div className="header-divider"></div>
+        </div>
+        <div className="committee-grid">
+          {[
+            { role: 'President' },
+            { role: 'Chief Administrative Officer' },
+            { role: 'Honorary Secretary' },
+            { role: 'Honorary Treasurer' },
+          ].map((c) => (
+            <div className="committee-card" key={c.role}>
+              <div className="committee-crest">⚜</div>
+              <h3>{c.role}</h3>
+              <p>Elected at AGM</p>
+            </div>
+          ))}
+        </div>
+        <p className="committee-note">A Managing Committee of seven members oversees the affairs of the Club.</p>
       </section>
     </div>
   );

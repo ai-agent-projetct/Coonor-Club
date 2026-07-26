@@ -11,7 +11,7 @@ import Heritage from './pages/Heritage'
 import Dining from './pages/Dining'
 import Accommodation from './pages/Accommodation'
 import Sports from './pages/Sports'
-import Membership from './pages/Membership'
+import Facilities from './pages/Facilities'
 import Events from './pages/Events'
 import Contact from './pages/Contact'
 import MemberAuth from './portal/MemberAuth'
@@ -49,7 +49,7 @@ export default function App() {
           <Route path="/dining" element={<PageTransition><Dining /></PageTransition>} />
           <Route path="/accommodation" element={<PageTransition><Accommodation /></PageTransition>} />
           <Route path="/sports" element={<PageTransition><Sports /></PageTransition>} />
-          <Route path="/membership" element={<PageTransition><Membership /></PageTransition>} />
+          <Route path="/facilities" element={<PageTransition><Facilities /></PageTransition>} />
           <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
         </Routes>

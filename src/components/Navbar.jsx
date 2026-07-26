@@ -9,10 +9,10 @@ const navLinks = [
   { path: '/dining', label: 'Dining' },
   { path: '/accommodation', label: 'Stay' },
   { path: '/sports', label: 'Sports' },
-  { path: '/membership', label: 'Membership' },
+  { path: '/facilities', label: 'Facilities' },
   { path: '/events', label: 'Events' },
   { path: '/contact', label: 'Contact' },
-  { path: '/login', label: 'Member Login' },
+  { path: '/login', label: 'Membership Login' },
 ]
 
 export default function Navbar() {
